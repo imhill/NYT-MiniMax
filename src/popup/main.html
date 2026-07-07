@@ -1,9 +1,79 @@
 <html>
     <head>
         <link rel="stylesheet" href="../styles/styles.css">
+        <style>
+            #calendar-picker{
+                text-align: center;
+                font-size: 12px;
+            }
+
+            #calendar-picker > a {
+                justify-content: center;
+                margin: 20 auto;
+                width: 35%;
+                height: 20%;
+                text-decoration: none;
+                color: #000;
+                border-radius: 10px;
+                border: 1px solid #000;
+                display: block;
+                font-size: 18px;
+                line-height: 2em;
+            }
+
+            #calendar-picker > input{
+                width: 80%;
+            }
+
+            #extension-info{
+                width: 100%;
+                text-align: center;
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+            }
+
+            #extension-info > * {
+                padding: 0px;
+                margin: 0px;
+            }
+
+            #extension-info > hr {
+                width: 85%;
+                margin: auto;
+            }
+
+            #extension-info > p {
+                display: inline-block;
+                margin: 0px 2px;
+            }
+
+            .info-title{
+                color: #888;
+            }
+            .info-data{
+                color: #000;
+            }
+
+            #birthday-message{
+                display: none;
+            }
+        </style>
     </head>
     <body>
-        <div>
+        <div id="calendar-picker">
+            <h1>Go To Date:</h1>
+            <input type="date" id="date-picker">
+            <a id="game-link" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go!</a>
+        </div>
+
+        <div id="extension-info">
+            <hr>
+            <p>Name: NYT MiniMax</p>
+            <br>
+            <p>Version: X.X.XX</p>
+        </div>
+        <div id="birthday-message">
             Happy Birthday Mom!
         </div>
 

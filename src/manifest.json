@@ -3,12 +3,13 @@
 	"name": "NYT MiniMax",
 	"version": "2.0.1",
 	"icons": {
+		"64": "icons/logo64.png",
 		"128": "icons/logo128.png"
 	},
 	"description": "Increase font size for NYT Mini Crossword and other QOL improvements.",
 	"action": {
 		"default_popup": "popup/main.html",
-		"default_icon": "icons/logo.png",
+		"default_icon": "icons/logo128.png",
 		"default_title": "NYT MiniMax"
 	},
 	"content_scripts": [
