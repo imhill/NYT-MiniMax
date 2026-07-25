@@ -144,9 +144,11 @@ async function updateFontToSize(){
 
     //select the hint list element and the input for the font size
     const hintList = document.querySelector("section.xwd__layout--cluelists");
+    const sizeInput = document.getElementById("sizeInput");
 
     //update the font size
     hintList.style.fontSize = `${userPreferredSize}px`;
+    sizeInput.value = userPreferredSize;
 }
 
 //function to display the tab when the button is clicked on
