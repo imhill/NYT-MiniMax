@@ -134,12 +134,19 @@ function updateFontSize(){
     hintList.style.fontSize = `${sizeInput.value}px`;
 }
 
-function updateFontToSize(){
+async function updateFontToSize(){
+    // Get user's preferences
+    const uPSPromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
+    const userPreferredSize = uPSPromise.userPreferredHintSize;
+    if(!userPreferredSize){
+        userPreferredSize = initialFontSize;
+    }
+
     //select the hint list element and the input for the font size
     const hintList = document.querySelector("section.xwd__layout--cluelists");
 
     //update the font size
-    hintList.style.fontSize = `${initialFontSize}px`;
+    hintList.style.fontSize = `${userPreferredSize}px`;
 }
 
 //function to display the tab when the button is clicked on
@@ -163,3 +170,6 @@ function stopInterval(){
 
 //stop searching after a few seconds
 setTimeout(stopInterval, 3000);
+
+// Find and update user saved size settings on change
+chrome.storage.sync.onChanged.addListener(updateFontToSize);
