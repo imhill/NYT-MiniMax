@@ -17,7 +17,7 @@ async function insertTextSizeControls(){
 
     //if it exists, build the additional features
     if (toolbar) {
-        console.log("found toolbar");
+        //console.log("found toolbar");
         //create a new list element
         
         const newToolbarElement = document.createElement("li");
@@ -68,12 +68,15 @@ async function insertTextSizeControls(){
         
         updateFontToSize();
     } else {
-        console.log("failed to add size button to toolbar");
+        //console.log("failed to add size button to toolbar");
     }
 }
 
 //function to check for the toolbar to be loaded
 function addToolbar(){
+    // Identify which game (mini or midi)
+    const title = document.querySelector("div.xwd__details--title");
+
     // add previous and next buttons to the title and date bar
     // Title header classes:
     // xwd__header--row xwd__header--fullwidth
@@ -85,24 +88,32 @@ function addToolbar(){
     const playButton = document.querySelector("button._momentButton_e4jbe_2");
 
     // prev and next buttons
-    if(headerContainer && playButton){        
+    if(title && headerContainer && playButton){    
+        // Isolate "Mini" or "Midi"
+        const currentGameName = title.innerHTML.slice(-4).toLowerCase();
+        
+        // Get the date from the current game's description text
         currentGameDate = new Date(Date.parse(document.querySelector("div.xwd__details--date").textContent));
+        // Calculate the date for "tomorrow" and "yesterday"
         tomorrowDate = new Date(currentGameDate.getTime()+dayMS);
         yesterdayDate = new Date(currentGameDate.getTime()-dayMS);
 
+        // Create a div to contain the prev and next game buttons
         const buttonContainer = document.createElement("div");
         buttonContainer.style.width = "600px";
 
+        // create tomorrow button
         const tomorrowGameButtonLink = document.createElement("a");
-        tomorrowGameButtonLink.href = `https://www.nytimes.com/crosswords/game/mini/${tomorrowDate.toISOString().split("T")[0].replaceAll("-","/")}`;
+        tomorrowGameButtonLink.href = `https://www.nytimes.com/crosswords/game/${currentGameName}/${tomorrowDate.toISOString().split("T")[0].replaceAll("-","/")}`;
         const tomorrowGameButton = document.createElement("button");
         tomorrowGameButton.textContent = "Tomorrow's Puzzle";
         tomorrowGameButton.style.padding = "4px";
         tomorrowGameButton.style.margin = "10px";
         tomorrowGameButtonLink.appendChild(tomorrowGameButton);
 
+        // create yesterday button
         const yesterdayGameButtonLink = document.createElement("a");
-        yesterdayGameButtonLink.href = `https://www.nytimes.com/crosswords/game/mini/${yesterdayDate.toISOString().split("T")[0].replaceAll("-","/")}`;
+        yesterdayGameButtonLink.href = `https://www.nytimes.com/crosswords/game/${currentGameName}/${yesterdayDate.toISOString().split("T")[0].replaceAll("-","/")}`;
         const yesterdayGameButton = document.createElement("button");
         yesterdayGameButton.textContent = "Yesterday's Puzzle";
         yesterdayGameButton.style.padding = "4px";
@@ -114,13 +125,14 @@ function addToolbar(){
 
         headerContainer.appendChild(buttonContainer);
 
+        // Insert the text size controls when the user starts playing the game
         playButton.addEventListener("click", insertTextSizeControls);
 
-        console.log("Added all features!");
+        //console.log("Added all features!");
 
         stopInterval();
     } else {
-        console.log("trying to add features again...");
+        //console.log("trying to add features again...");
     }
 }
 
