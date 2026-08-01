@@ -34,7 +34,7 @@ async function updateSize(){
     const newSize = sizeInput.value;
 
     await chrome.storage.sync.set({"userPreferredHintSize":newSize});
-    console.log(`Updated size to ${newSize}`);
+    //console.log(`Updated size to ${newSize}`);
 }
 
 const uPSPromise = await chrome.storage.sync.get(["userPreferredHintSize"]);

@@ -19,16 +19,10 @@ async function insertTextSizeControls(){
     if (toolbar) {
         //console.log("found toolbar");
 
-        // create a new list element for swapping the hint and crossword
-        // html swapping arrow code "&#8646;"
-        // Left arrow &#10563;
-        // Right arrow &#10562;
-
-
         //create a new list element for changing font size
-        const newToolbarElement = document.createElement("li");
-        newToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
-        newToolbarElement.id = "changeSizeTab";
+        const hintSizeToolbarElement = document.createElement("li");
+        hintSizeToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+        hintSizeToolbarElement.id = "changeSizeTab";
 
         //create the button for the tab
         const tabButton = document.createElement("button");
@@ -67,10 +61,28 @@ async function insertTextSizeControls(){
         optionList.appendChild(titleListElement);
         optionList.appendChild(inputListInput);
 
-        newToolbarElement.appendChild(tabButton);
-        newToolbarElement.appendChild(optionList);
+        hintSizeToolbarElement.appendChild(tabButton);
+        hintSizeToolbarElement.appendChild(optionList);
 
-        toolbar.appendChild(newToolbarElement);
+        toolbar.appendChild(hintSizeToolbarElement);
+
+        // create a new list element for swapping the hint and crossword
+        const swapToolbarElement = document.createElement("li");
+        swapToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+        swapToolbarElement.id = "swapHintSide";
+
+        //create the button for the tab
+        const swapTabButton = document.createElement("button");
+        swapTabButton.type = "button";
+        swapTabButton.ariaLabel = "Swap Hint Side";
+        swapTabButton.innerHTML = "&#10563;";
+        swapTabButton.style.fontSize = "32px";
+        swapTabButton.id = "swap-tab-label";
+        swapTabButton.addEventListener("click", swapHintSide);
+
+        swapToolbarElement.appendChild(swapTabButton);
+
+        toolbar.appendChild(swapToolbarElement);
         
         updateFontToSize();
     } else {
@@ -190,6 +202,8 @@ function removeAds(){
     }
 }
 
+let currentHintSide = 1;
+
 // function to swap hint and game sections
 function swapHintSide(){
     // puzzle
@@ -201,7 +215,22 @@ function swapHintSide(){
     // xwd__layout--cluelists
     const hintList = document.querySelector("section.xwd__layout--cluelists");
 
-    fullGameSection.appendChild(gameBoard);
+    // html swapping arrow code "&#8646;"
+    // Left arrow &#10563;
+    // Right arrow &#10562;
+    const swapTabLabel = document.getElementById("swap-tab-label");
+
+    // either re-add the game board or hint list to swap positions
+    // additionally, update the symbol of the button
+    if(currentHintSide > 0){
+        fullGameSection.appendChild(gameBoard);
+        swapTabLabel.innerHTML = "&#10562;";
+    } else {
+        fullGameSection.appendChild(hintList);
+        swapTabLabel.innerHTML = "&#10563;";
+    }
+
+    currentHintSide *= -1;
 }
 
 //look for the toolbar every 100 miliseconds
