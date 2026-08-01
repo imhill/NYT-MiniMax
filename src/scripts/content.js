@@ -18,8 +18,14 @@ async function insertTextSizeControls(){
     //if it exists, build the additional features
     if (toolbar) {
         //console.log("found toolbar");
-        //create a new list element
-        
+
+        // create a new list element for swapping the hint and crossword
+        // html swapping arrow code "&#8646;"
+        // Left arrow &#10563;
+        // Right arrow &#10562;
+
+
+        //create a new list element for changing font size
         const newToolbarElement = document.createElement("li");
         newToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
         newToolbarElement.id = "changeSizeTab";
@@ -174,12 +180,37 @@ function displaySizeTab(){
     }   
 }
 
+// remove top ad (and any others that get caught)
+function removeAds(){
+    // pz-section pz-section-filled pz-ad-box
+    const ads = document.querySelectorAll("div.pz-section.pz-section-filled.pz-ad-box");
+
+    for(const ad of ads){
+        ad.remove();
+    }
+}
+
+// function to swap hint and game sections
+function swapHintSide(){
+    // puzzle
+    const fullGameSection = document.getElementById("puzzle");
+
+    // xwd__layout_clueBarAndBoard
+    const gameBoard = document.querySelector("section.xwd__layout_clueBarAndBoard");
+
+    // xwd__layout--cluelists
+    const hintList = document.querySelector("section.xwd__layout--cluelists");
+
+    fullGameSection.appendChild(gameBoard);
+}
+
 //look for the toolbar every 100 miliseconds
 const searchInterval = setInterval(addToolbar, 100);
 
 //function to stop the interval function
 function stopInterval(){
     clearInterval(searchInterval);
+    removeAds();
 }
 
 //stop searching after a few seconds
