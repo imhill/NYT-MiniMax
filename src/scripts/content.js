@@ -116,9 +116,12 @@ function addToolbar(){
         tomorrowDate = new Date(currentGameDate.getTime()+dayMS);
         yesterdayDate = new Date(currentGameDate.getTime()-dayMS);
 
-        // Create a div to contain the prev and next game buttons
+        // Create a div to contain the div with the prev and next game buttons
         const buttonContainer = document.createElement("div");
-        buttonContainer.style.width = "600px";
+        buttonContainer.classList = "xwd__header--puzzle-details-container";
+        buttonContainer.style = "display: grid; justify-content: center;";
+
+        const centeredDiv = document.createElement("div");
 
         // create tomorrow button
         const tomorrowGameButtonLink = document.createElement("a");
@@ -138,8 +141,20 @@ function addToolbar(){
         yesterdayGameButton.style.margin = "10px";
         yesterdayGameButtonLink.appendChild(yesterdayGameButton);
 
-        buttonContainer.appendChild(yesterdayGameButtonLink);
-        buttonContainer.appendChild(tomorrowGameButtonLink);
+        // create archive button
+        const archiveButtonLink = document.createElement("a");
+        archiveButtonLink.href = `https://www.nytimes.com/crosswords/archive/${currentGameName}`;
+        const archiveButton = document.createElement("button");
+        archiveButton.textContent = "Archive";
+        archiveButton.style.padding = "4px";
+        archiveButton.style.margin = "10px";
+        archiveButtonLink.appendChild(archiveButton);
+
+        centeredDiv.appendChild(yesterdayGameButtonLink);
+        centeredDiv.appendChild(tomorrowGameButtonLink);
+        centeredDiv.appendChild(archiveButtonLink);
+
+        buttonContainer.appendChild(centeredDiv);
 
         headerContainer.appendChild(buttonContainer);
 
