@@ -25,53 +25,45 @@
                 font-weight: bold;
             }
 
-
-            /* Home Tab */
+            /* General Styles */
             .section-header{
                 font-size: 24px;
+                margin: 10px auto;
             }
 
-            #calendar-picker{
+            /* Home Tab */
+            #home-page{
                 text-align: center;
-            }
-
-            #calendar-picker > a {
-                justify-content: center;
-                margin: -12px auto;
-                width: 30%;
-                height: 15%;
-                text-decoration: none;
-                color: #000;
-                border-radius: 10px;
-                border: 2px solid #000;
-                display: inline-block;
                 font-size: 18px;
-                line-height: 1.5em;
-                background-color: #f5fcff;
-            }
-            #calendar-picker > a:hover{
-                background-color: #ecf8ff;
-            }
-            #calendar-picker > a:active{
-                background-color: #cfedff;
             }
 
-            #calendar-picker > input{
-                width: 55%;
-                margin-top: -12px;
-                line-height: 2em;
+            .link-button{
+                border: 1px solid black;
+                margin: -4px 8px 0px 8px;
+                padding: 4px;
+                text-decoration: none;
+                color: black;
+                border-radius: 4px;
             }
 
-            input{
-                border-radius: 10px;
-                background-color: #f5fcff;
+            #date-picker{
+                display: block;
+                margin: -8px auto 12px auto;
+                font-size: 20px;
             }
-            input:hover{
-                background-color: #ecf8ff;
+
+            .game-button{
+                display: inline-block;
+            }
+
+            .archive-button{
+                display: block;
+                margin: -8px auto 12px auto;
+                width: 80%;
             }
 
             /* Settings Tab */
-            #size-selector{
+            #settings-page{
                 text-align: center;
             }
             #size-selector > input,
@@ -137,20 +129,37 @@
         <hr>
 
         <div id="home-page">
-            <div id="calendar-picker">
-                <h1 class="section-header">Pick date:</h1>
-                <input type="date" id="date-picker">
-                <a id="mini-link" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Mini</a>
-                <a id="midi-link" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Midi</a>
-                <a id="mini-archive-link" target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Mini Archives</a>
-                <a id="midi-archive-link" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Midi Archives</a>
-            </div>
+            <h1 class="section-header">Select Date:</h1>
+            <input type="date" id="date-picker">
+            <a id="mini-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go to Mini</a>
+            <a id="midi-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Go to Midi</a>
+            <br>
+            <h1 class="section-header">Go to Archives:</h1>
+            <a id="mini-archive-link" class="link-button archive-button"  target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Mini Archives</a>
+            <a id="midi-archive-link" class="link-button archive-button" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Midi Archives</a>
         </div>
 
         <div id="settings-page" style="display: none;">
             <div id="size-selector">
                 <h1 class="section-header">Preferred Size:</h1>
-                <label>Size: </label><input type="number" id="size-input" value="20">
+                <label>Size: </label>
+                <input type="number" id="size-input" value="20">
+            </div>
+            <br>
+            <div id="side-selector">
+                <h1 class="section-header">Preferred Side:</h1>
+
+                <label for ="left-side-input">Left</label>
+                <input type="radio" id="left-side-input" name="side-selection" value="Left">
+
+                <input type="radio" id="right-side-input" name="side-selection" value="Right" checked>
+                <label for="right-side-input">Right</label>
+            </div>
+            <div id="dark-mode-selector">
+                <h1 class="section-header">Dark Mode:</h1>
+
+                <label for="dark-mode-input" id="dark-mode-label"></label>
+                <input type="checkbox" id="dark-mode-input">
             </div>
         </div>
 

@@ -37,30 +37,73 @@ async function updateSize(){
     const newSize = sizeInput.value;
 
     await chrome.storage.sync.set({"userPreferredHintSize":newSize});
-    //console.log(`Updated size to ${newSize}`);
 }
 
-const uPSPromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
-const userPreferredSize = uPSPromise.userPreferredHintSize;
+const userPreferredSizePromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
+const userPreferredSize = userPreferredSizePromise.userPreferredHintSize;
 
 sizeInput.value = userPreferredSize;
 
+//
+
 // Implement the user hint side preference
+// 1 = right, -1 = left
+const sideInput = document.getElementById("side-selector");
+sideInput.addEventListener("change",updateSide);
 
-/*const sizeInput = document.getElementById("size-input");
-sizeInput.addEventListener("change",updateSize);
+async function updateSide(event){
+    const sideSelected = (event?.target?.defaultValue);
+    
+    const newSide = (sideSelected == "Right") ? 1 : -1;
 
-async function updateSize(){
-    const newSize = sizeInput.value;
-
-    await chrome.storage.sync.set({"userPreferredHintSize":newSize});
-    //console.log(`Updated size to ${newSize}`);
+    await chrome.storage.sync.set({"userPreferredHintSide":newSide});
 }
 
-const uPSPromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
-const userPreferredSize = uPSPromise.userPreferredHintSize;
+const userPreferredSidePromise = await chrome.storage.sync.get(["userPreferredHintSide"]);
+const userPreferredSide = userPreferredSidePromise.userPreferredHintSide;
 
-sizeInput.value = userPreferredSize;*/
+const rightSideInput = document.getElementById("right-side-input");
+const leftSideInput = document.getElementById("left-side-input");
+
+// 1 = right, -1 = left
+if(userPreferredSide > 0){
+    rightSideInput.checked = true;
+} else {
+    leftSideInput.checked = true;
+}
+
+//
+
+// Implement the user dark mode preferences
+const darkModeInput = document.getElementById("dark-mode-input");
+const darkModeCheckboxLabel = document.getElementById("dark-mode-label");
+
+darkModeInput.addEventListener("change", updateDarkMode);
+
+async function updateDarkMode(){
+    const darkModeActive = darkModeInput.checked;
+
+    if(darkModeActive){
+        darkModeCheckboxLabel.innerText = "On";
+    } else {
+        darkModeCheckboxLabel.innerText = "Off";
+    }
+
+    await chrome.storage.sync.set({"userDarkMode":darkModeActive});
+}
+
+const userPreferredDarkModePromise = await chrome.storage.sync.get(["userDarkMode"]);
+const userDarkMode = userPreferredDarkModePromise.userDarkMode;
+
+if(userDarkMode){
+    darkModeCheckboxLabel.innerText = "On";
+    darkModeInput.checked = true;
+} else {
+    darkModeCheckboxLabel.innerText = "Off";
+    darkModeInput.checked = false;
+}
+
+
 //
 
 // implement menu button functionality

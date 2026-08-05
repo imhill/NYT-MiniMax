@@ -217,6 +217,7 @@ function removeAds(){
     }
 }
 
+// 1 = right, -1 = left
 let currentHintSide = 1;
 
 // function to swap hint and game sections
