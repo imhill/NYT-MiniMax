@@ -85,8 +85,10 @@ async function updateDarkMode(){
 
     if(darkModeActive){
         darkModeCheckboxLabel.innerText = "On";
+        document.body.classList = "dark-mode";
     } else {
         darkModeCheckboxLabel.innerText = "Off";
+        document.body.classList = "";
     }
 
     await chrome.storage.sync.set({"userDarkMode":darkModeActive});
@@ -98,9 +100,11 @@ const userDarkMode = userPreferredDarkModePromise.userDarkMode;
 if(userDarkMode){
     darkModeCheckboxLabel.innerText = "On";
     darkModeInput.checked = true;
+    document.body.classList = "dark-mode";
 } else {
     darkModeCheckboxLabel.innerText = "Off";
     darkModeInput.checked = false;
+    document.body.classList = "";
 }
 
 

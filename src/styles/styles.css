@@ -1,11 +1,36 @@
 html{
     width: 300px;
     height: 250px;
-    background-color: #FFF;
 }
 
+/* Dark and Light Mode */
 body{
     margin: 2px;
+
+    --textColor: #000;
+    --backgroundColor: #FFF;
+    --borderColor: #000;
+    --secondaryTextColor: #888;
+    --inputBoxBackgroundColor: #FFF;
+
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+}
+
+body.dark-mode{
+    --textColor: #DDD;
+    --backgroundColor: #222;
+    --borderColor: #DDD;
+    --secondaryTextColor: #888;
+    --inputBoxBackgroundColor: #333;
+
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+}
+
+input{
+    background-color: var(--inputBoxBackgroundColor);
+    color: var(--textColor);
 }
 
 hr {
