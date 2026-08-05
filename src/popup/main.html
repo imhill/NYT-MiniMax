@@ -2,10 +2,31 @@
     <head>
         <link rel="stylesheet" href="../styles/styles.css">
         <style>
-            html{
-                background-color: #FFF;
+            /* Tab Buttons */
+            #buttons-section{
+                text-align: center;
             }
 
+            .tab-button{
+                display: inline-block;
+                text-align: center;
+                margin: 0px 4px 2px 4px;
+                width: 25%;
+            }
+            .tab-button:hover{
+                font-weight: 550;
+                cursor: pointer;
+            }
+            .tab-button:active{
+                font-weight: bold;
+            }
+
+            #home-button{
+                font-weight: bold;
+            }
+
+
+            /* Home Tab */
             .section-header{
                 font-size: 24px;
             }
@@ -49,10 +70,10 @@
                 background-color: #ecf8ff;
             }
 
+            /* Settings Tab */
             #size-selector{
                 text-align: center;
             }
-
             #size-selector > input,
             #size-selector > label {
                 display: inline-block;
@@ -67,27 +88,29 @@
                 font-size: 18px;
             }
 
+
+            /* About Tab */
             #extension-info{
                 width: 100%;
                 text-align: center;
                 position: absolute;
-                bottom: 0px;
+                top: 75%;
                 left: 0px;
             }
-
             #extension-info > * {
                 padding: 0px;
                 margin: 0px;
             }
-
-            #extension-info > hr {
-                width: 85%;
-                margin: auto;
-            }
-
             #extension-info > p {
                 display: inline-block;
                 margin: 0px 2px;
+                font-size: 16px;
+            }
+
+            #extension-icon{
+                height: 50%;
+                display: block;
+                margin: 10% auto;
             }
 
             .info-title{
@@ -103,22 +126,43 @@
         </style>
     </head>
     <body>
-        <div id="calendar-picker">
-            <h1 class="section-header">Go To Date:</h1>
-            <input type="date" id="date-picker">
-            <a id="game-link" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go!</a>
-        </div>
-        <div id="size-selector">
-            <h1 class="section-header">Preferred Size:</h1>
-            <label>Size: </label><input type="number" id="size-input" value="20">
+        <div id="tab-menu">
+            <div id="buttons-section">
+                <div class="tab-button" id="home-button">Home</div>
+                <div class="tab-button" id="settings-button">Settings</div>
+                <div class="tab-button" id="about-button">About</div>
+            </div>
         </div>
 
-        <div id="extension-info">
-            <hr>
-            <p>Name: NYT MiniMax</p>
-            <br>
-            <p>Version: X.X.XX</p>
+        <hr>
+
+        <div id="home-page">
+            <div id="calendar-picker">
+                <h1 class="section-header">Pick date:</h1>
+                <input type="date" id="date-picker">
+                <a id="mini-link" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Mini</a>
+                <a id="midi-link" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Midi</a>
+                <a id="mini-archive-link" target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Mini Archives</a>
+                <a id="midi-archive-link" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Midi Archives</a>
+            </div>
         </div>
+
+        <div id="settings-page" style="display: none;">
+            <div id="size-selector">
+                <h1 class="section-header">Preferred Size:</h1>
+                <label>Size: </label><input type="number" id="size-input" value="20">
+            </div>
+        </div>
+
+        <div id="about-page" style="display: none;">
+            <img id="extension-icon" src="../icons/logo128.png">
+            <div id="extension-info">
+                <p>Name: NYT MiniMax</p>
+                <br>
+                <p>Version: X.X.XX</p>
+            </div>
+        </div>
+
         <div id="birthday-message">
             Happy Birthday Mom!
         </div>
