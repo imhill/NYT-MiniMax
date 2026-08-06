@@ -2,116 +2,6 @@
     <head>
         <link rel="stylesheet" href="../styles/styles.css">
         <style>
-            /* Tab Buttons */
-            #buttons-section{
-                text-align: center;
-            }
-
-            .tab-button{
-                display: inline-block;
-                text-align: center;
-                margin: 0px 4px 2px 4px;
-                width: 25%;
-            }
-            .tab-button:hover{
-                font-weight: 550;
-                cursor: pointer;
-            }
-            .tab-button:active{
-                font-weight: bold;
-            }
-
-            #home-button{
-                font-weight: bold;
-            }
-
-            /* General Styles */
-            .section-header{
-                font-size: 24px;
-                margin: 10px auto;
-            }
-
-            /* Home Tab */
-            #home-page{
-                text-align: center;
-                font-size: 18px;
-            }
-
-            .link-button{
-                border: 1px solid var(--borderColor);
-                margin: -4px 8px 0px 8px;
-                padding: 4px;
-                text-decoration: none;
-                color: var(--textColor);
-                border-radius: 4px;
-            }
-
-            #date-picker{
-                display: block;
-                margin: -8px auto 12px auto;
-                font-size: 20px;
-            }
-
-            .game-button{
-                display: inline-block;
-            }
-
-            .archive-button{
-                display: block;
-                margin: -8px auto 12px auto;
-                width: 80%;
-            }
-
-            /* Settings Tab */
-            #settings-page{
-                text-align: center;
-            }
-            #size-selector > input,
-            #size-selector > label {
-                display: inline-block;
-                margin: -12px 4px;
-                font-size: 16px;
-                line-height: 1.5em;
-            }
-            #size-selector > input{
-                width: 35%;
-            }
-            #size-selector > label{
-                font-size: 18px;
-            }
-
-
-            /* About Tab */
-            #extension-info{
-                width: 100%;
-                text-align: center;
-                position: absolute;
-                top: 75%;
-                left: 0px;
-            }
-            #extension-info > * {
-                padding: 0px;
-                margin: 0px;
-            }
-            #extension-info > p {
-                display: inline-block;
-                margin: 0px 2px;
-                font-size: 16px;
-            }
-
-            #extension-icon{
-                height: 50%;
-                display: block;
-                margin: 10% auto;
-            }
-
-            .info-title{
-                color: var(--secondaryTextColor);
-            }
-            .info-data{
-                color: var(--textColor);
-            }
-
             #birthday-message{
                 display: none;
             }
@@ -130,11 +20,15 @@
 
         <div id="home-page">
             <h1 class="section-header">Select Date:</h1>
+
             <input type="date" id="date-picker">
             <a id="mini-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go to Mini</a>
             <a id="midi-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Go to Midi</a>
+
             <br>
+
             <h1 class="section-header">Go to Archives:</h1>
+
             <a id="mini-archive-link" class="link-button archive-button"  target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Mini Archives</a>
             <a id="midi-archive-link" class="link-button archive-button" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Midi Archives</a>
         </div>
@@ -142,23 +36,24 @@
         <div id="settings-page" style="display: none;">
             <div id="size-selector">
                 <h1 class="section-header">Preferred Size:</h1>
-                <label>Size: </label>
+
+                <label for="size-input" class="settings-label">Size: </label>
                 <input type="number" id="size-input" value="20">
             </div>
-            <br>
+
             <div id="side-selector">
                 <h1 class="section-header">Preferred Side:</h1>
 
-                <label for ="left-side-input">Left</label>
+                <label for ="left-side-input" class="settings-label">Left</label>
                 <input type="radio" id="left-side-input" name="side-selection" value="Left">
-
                 <input type="radio" id="right-side-input" name="side-selection" value="Right" checked>
-                <label for="right-side-input">Right</label>
+                <label for="right-side-input" class="settings-label">Right</label>
             </div>
+
             <div id="dark-mode-selector">
                 <h1 class="section-header">Dark Mode:</h1>
 
-                <label for="dark-mode-input" id="dark-mode-label"></label>
+                <label for="dark-mode-input" class="settings-label" id="dark-mode-label"></label>
                 <input type="checkbox" id="dark-mode-input">
             </div>
         </div>
