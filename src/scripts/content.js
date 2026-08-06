@@ -4,6 +4,7 @@ const initialFontSize = 20;
 //number of miliseconds in a day
 const dayMS = 86400000;
 
+// function to wait for some time (in ms)
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function insertTextSizeControls(){
@@ -12,7 +13,6 @@ async function insertTextSizeControls(){
     // add font size control buttons to the control bar
     // control bar classes: 
     // xwd__toolbar--expandedMenu
-
     const toolbar = document.querySelector("div.xwd__toolbar--expandedMenu");
 
     //if it exists, build the additional features
