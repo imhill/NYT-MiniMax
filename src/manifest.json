@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "NYT MiniMax",
-	"version": "2.3.77",
+	"version": "2.3.8",
 	"icons": {
 		"64": "icons/logo64.png",
 		"128": "icons/logo128.png"

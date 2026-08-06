@@ -84,7 +84,7 @@ async function insertTextSizeControls(){
 
         toolbar.appendChild(swapToolbarElement);
         
-        updateFontToSize();
+        updateGameSettings();
     } else {
         //console.log("failed to add size button to toolbar");
     }
@@ -179,10 +179,45 @@ function updateFontSize(){
     hintList.style.fontSize = `${sizeInput.value}px`;
 }
 
-async function updateFontToSize(){
-    // Get user's preferences
-    const uPSPromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
-    const userPreferredSize = uPSPromise.userPreferredHintSize;
+async function userSettingsUpdated(changes){
+    for(const key in changes){
+        switch(key){
+            case "userPreferredHintSize":
+                // Get user's size preference
+                const userPreferredSizePromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
+                const userPreferredSize = userPreferredSizePromise.userPreferredHintSize;
+
+                //select the hint list element and the input for the font size
+                const hintList = document.querySelector("section.xwd__layout--cluelists");
+                const sizeInput = document.getElementById("sizeInput");
+
+                //update the font size
+                hintList.style.fontSize = `${userPreferredSize}px`;
+                sizeInput.value = userPreferredSize;
+
+                break;
+
+            case "userPreferredHintSide":
+                // Get user's side preference
+                const userPreferredSidePromise = await chrome.storage.sync.get(["userPreferredHintSide"]);
+                const userPreferredSide = userPreferredSidePromise.userPreferredHintSide;
+
+                // swap the hint side if it needs to be updated
+                if(currentHintSide != userPreferredSide){
+                    swapHintSide();
+                }
+
+                break;
+        }
+    }
+}
+
+async function updateGameSettings(){
+    // Get user's preferences for size
+    const userPreferredSizePromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
+    const userPreferredSize = userPreferredSizePromise.userPreferredHintSize;
+
+    // If not set, use default initial size
     if(!userPreferredSize){
         userPreferredSize = initialFontSize;
     }
@@ -194,6 +229,20 @@ async function updateFontToSize(){
     //update the font size
     hintList.style.fontSize = `${userPreferredSize}px`;
     sizeInput.value = userPreferredSize;
+
+    // Get user's preferences for hint side
+    const userPreferredSidePromise = await chrome.storage.sync.get(["userPreferredHintSide"]);
+    const userPreferredSide = userPreferredSidePromise.userPreferredHintSide;
+
+    // if not set, use the current side [default (1 {right})]
+    if(!userPreferredSide){
+        userPreferredSide = currentHintSide;
+    }
+
+    // swap the side if it needs to be swapped
+    if(currentHintSide != userPreferredSide){
+        swapHintSide();
+    }
 }
 
 //function to display the tab when the button is clicked on
@@ -236,17 +285,18 @@ function swapHintSide(){
     // Right arrow &#10562;
     const swapTabLabel = document.getElementById("swap-tab-label");
 
+    // swap the value
+    currentHintSide *= -1;
+
     // either re-add the game board or hint list to swap positions
     // additionally, update the symbol of the button
     if(currentHintSide > 0){
-        fullGameSection.appendChild(gameBoard);
-        swapTabLabel.innerHTML = "&#10562;";
-    } else {
         fullGameSection.appendChild(hintList);
         swapTabLabel.innerHTML = "&#10563;";
+    } else {
+        fullGameSection.appendChild(gameBoard);
+        swapTabLabel.innerHTML = "&#10562;";
     }
-
-    currentHintSide *= -1;
 }
 
 //look for the toolbar every 100 miliseconds
@@ -262,4 +312,4 @@ function stopInterval(){
 setTimeout(stopInterval, 3000);
 
 // Find and update user saved size settings on change
-chrome.storage.sync.onChanged.addListener(updateFontToSize);
+chrome.storage.sync.onChanged.addListener(userSettingsUpdated);
