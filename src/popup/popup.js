@@ -1,133 +1,27 @@
-// Update the extension version information
-const infoSection = document.getElementById("extension-info");
-
-const manifest = chrome.runtime.getManifest();
-const extensionName = "NYT MiniMax";
-const extensionVersion = manifest.version;
-
-infoSection.innerHTML = `<p class="info-title">Name: </p><p class="info-data">${extensionName}</p><br><p class="info-title">Version: </p><p class="info-data">${extensionVersion}</p>`;
-//
-
-// Set the "Go!" button links to today's date
-const miniBaseLink = "https://www.nytimes.com/crosswords/game/mini/";
-const midiBaseLink = "https://www.nytimes.com/crosswords/game/midi/";
-
-const datePicker = document.getElementById("date-picker");
-datePicker.valueAsDate = new Date();
-const miniGameLink = document.getElementById("mini-link");
-const midiGameLink = document.getElementById("midi-link");
-
-datePicker.addEventListener("change", updateGameLinks);
-
-function updateGameLinks(){
-    const selectedDate = datePicker.value;
-
-    const formattedDate = selectedDate.replaceAll("-","/");
-
-    miniGameLink.href = `${miniBaseLink}${formattedDate}`;
-    midiGameLink.href = `${midiBaseLink}${formattedDate}`;
-}
-//
-
-// Implement the user size preferences
-const sizeInput = document.getElementById("size-input");
-sizeInput.addEventListener("change",updateSize);
-
-async function updateSize(){
-    const newSize = sizeInput.value;
-
-    await chrome.storage.sync.set({"userPreferredHintSize":newSize});
-}
-
-const userPreferredSizePromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
-const userPreferredSize = userPreferredSizePromise.userPreferredHintSize;
-
-sizeInput.value = userPreferredSize;
-
-//
-
-// Implement the user hint side preference
-// 1 = right, -1 = left
-const sideInput = document.getElementById("side-selector");
-sideInput.addEventListener("change",updateSide);
-
-async function updateSide(event){
-    const sideSelected = (event?.target?.defaultValue);
-    
-    const newSide = (sideSelected == "Right") ? 1 : -1;
-
-    await chrome.storage.sync.set({"userPreferredHintSide":newSide});
-}
-
-const userPreferredSidePromise = await chrome.storage.sync.get(["userPreferredHintSide"]);
-const userPreferredSide = userPreferredSidePromise.userPreferredHintSide;
-
-const rightSideInput = document.getElementById("right-side-input");
-const leftSideInput = document.getElementById("left-side-input");
-
-// 1 = right, -1 = left
-if(userPreferredSide > 0){
-    rightSideInput.checked = true;
-} else {
-    leftSideInput.checked = true;
-}
-
-//
-
-// Implement the user dark mode preferences
-const darkModeInput = document.getElementById("dark-mode-input");
-const darkModeCheckboxLabel = document.getElementById("dark-mode-label");
-
-darkModeInput.addEventListener("change", updateDarkMode);
-
-async function updateDarkMode(){
-    const darkModeActive = darkModeInput.checked;
-
-    if(darkModeActive){
-        darkModeCheckboxLabel.innerText = "On";
-        document.body.classList.add("dark-mode");
-    } else {
-        darkModeCheckboxLabel.innerText = "Off";
-        document.body.classList.remove("dark-mode");
-    }
-
-    await chrome.storage.sync.set({"userDarkMode":darkModeActive});
-}
-
-const userPreferredDarkModePromise = await chrome.storage.sync.get(["userDarkMode"]);
-const userDarkMode = userPreferredDarkModePromise.userDarkMode;
-
-if(userDarkMode){
-    darkModeCheckboxLabel.innerText = "On";
-    darkModeInput.checked = true;
-    document.body.classList = "dark-mode";
-} else {
-    darkModeCheckboxLabel.innerText = "Off";
-    darkModeInput.checked = false;
-    document.body.classList = "";
-}
-
-//
-
+/* Menu Setup */
 // implement menu button functionality
-
 const homeButton = document.getElementById("home-button");
-const settingsButton = document.getElementById("settings-button");
-const aboutButton = document.getElementById("about-button");
 homeButton.addEventListener("click",homeButtonPressed);
-settingsButton.addEventListener("click",settingsButtonPressed);
-aboutButton.addEventListener("click",aboutButtonPressed);
 
 function homeButtonPressed(){
     switchTab("home");
 }
+
+const settingsButton = document.getElementById("settings-button");
+settingsButton.addEventListener("click",settingsButtonPressed);
+
 function settingsButtonPressed(){
     switchTab("settings");
 }
+
+const aboutButton = document.getElementById("about-button");
+aboutButton.addEventListener("click",aboutButtonPressed);
+
 function aboutButtonPressed(){
     switchTab("about");
 }
 
+// Get the elements for each tab, and store with key labels
 const homeTab = document.getElementById("home-page");
 const settingsTab = document.getElementById("settings-page");
 const aboutTab = document.getElementById("about-page");
@@ -135,6 +29,7 @@ const tabs = {"home":{"button": homeButton, "tab":homeTab},
               "settings":{"button": settingsButton, "tab":settingsTab},
               "about":{"button": aboutButton, "tab":aboutTab}};
 
+// Generic function to switch to a specific tab given the key
 function switchTab(tabName){
     for(const tab in tabs){
         if(tab == tabName){
@@ -146,5 +41,127 @@ function switchTab(tabName){
         }
     }
 }
+//
 
+/* Home Page Setup */
+
+// setup the default base link for the crosswords
+const miniBaseLink = "https://www.nytimes.com/crosswords/game/mini/";
+const midiBaseLink = "https://www.nytimes.com/crosswords/game/midi/";
+
+// Get and setup the date picker
+const datePicker = document.getElementById("date-picker");
+datePicker.valueAsDate = new Date();
+
+// Get the links
+const miniGameLink = document.getElementById("mini-link");
+const midiGameLink = document.getElementById("midi-link");
+
+datePicker.addEventListener("change", updateGameLinks);
+
+// Set the "Go!" button links to today's date
+function updateGameLinks(){
+    const selectedDate = datePicker.value;
+
+    // reformat the date to match NYT link format
+    const formattedDate = selectedDate.replaceAll("-","/");
+
+    // update the links
+    miniGameLink.href = `${miniBaseLink}${formattedDate}`;
+    midiGameLink.href = `${midiBaseLink}${formattedDate}`;
+}
+//
+
+/* Settings Page Setup */
+
+// Implement the user size preferences to update sync storage
+const sizeInput = document.getElementById("size-input");
+sizeInput.addEventListener("change",updateSize);
+
+async function updateSize(){
+    const newSize = sizeInput.value;
+
+    // Store in chrome sync
+    await chrome.storage.sync.set({"userPreferredHintSize":newSize});
+}
+
+// Load the current user preferred size and set as the default value to the size input
+const userPreferredSizePromise = await chrome.storage.sync.get(["userPreferredHintSize"]);
+const userPreferredSize = userPreferredSizePromise.userPreferredHintSize;
+sizeInput.value = userPreferredSize;
+
+// Implement the user hint side preference
+// Values: 1 = right, -1 = left
+const sideInput = document.getElementById("side-selector");
+sideInput.addEventListener("change",updateSide);
+
+async function updateSide(event){
+    const sideSelected = (event?.target?.defaultValue);
+    
+    const newSide = (sideSelected == "Right") ? 1 : -1;
+
+    await chrome.storage.sync.set({"userPreferredHintSide":newSide});
+}
+
+// Load the current user preferred side and set as the default value to the side radio buttons
+const userPreferredSidePromise = await chrome.storage.sync.get(["userPreferredHintSide"]);
+const userPreferredSide = userPreferredSidePromise.userPreferredHintSide;
+
+// Get the two radio buttons
+const rightSideInput = document.getElementById("right-side-input");
+const leftSideInput = document.getElementById("left-side-input");
+
+// 1 = right, -1 = left, update the correct button to be default checked
+if(userPreferredSide > 0){
+    rightSideInput.checked = true;
+} else {
+    leftSideInput.checked = true;
+}
+
+// Implement the user dark mode preferences
+const darkModeCheckboxLabel = document.getElementById("dark-mode-label");
+const darkModeInput = document.getElementById("dark-mode-input");
+darkModeInput.addEventListener("change", updateDarkMode);
+
+// Function to toggle dark mode on and off and update the text on the label
+async function updateDarkMode(){
+    const darkModeActive = darkModeInput.checked;
+
+    if(darkModeActive){
+        darkModeCheckboxLabel.innerText = "On";
+        document.body.classList.add("dark-mode");
+    } else {
+        darkModeCheckboxLabel.innerText = "Off";
+        document.body.classList.remove("dark-mode");
+    }
+
+    // Store in chrome sync
+    await chrome.storage.sync.set({"userDarkMode":darkModeActive});
+}
+
+// Load the current user preference and set the checkbox
+const userPreferredDarkModePromise = await chrome.storage.sync.get(["userDarkMode"]);
+const userDarkMode = userPreferredDarkModePromise.userDarkMode;
+
+if(userDarkMode){
+    darkModeCheckboxLabel.innerText = "On";
+    darkModeInput.checked = true;
+    document.body.classList.add("dark-mode");
+} else {
+    darkModeCheckboxLabel.innerText = "Off";
+    darkModeInput.checked = false;
+    document.body.classList.remove("dark-mode");
+}
+//
+
+/* About Tab Setup */
+
+// Update the extension version information for the about tab
+const infoSection = document.getElementById("extension-info");
+
+const manifest = chrome.runtime.getManifest();
+const extensionName = "NYT MiniMax";
+const extensionVersion = manifest.version;
+
+infoSection.innerHTML = `<p class="info-title">Name: </p><p class="info-data">${extensionName}</p><br><p class="info-title">Version: </p><p class="info-data">${extensionVersion}</p>`;
 //
