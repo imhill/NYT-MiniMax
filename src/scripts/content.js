@@ -1,11 +1,105 @@
-// initial hint font size
-const initialFontSize = 20;
+/* Helper variables and functions */
 
 //number of miliseconds in a day
 const dayMS = 86400000;
-
 // function to wait for some time (in ms)
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+/* Build out the previous and next game buttons, and attach function for building new toolbar tabs */
+
+//function to check for the toolbar to be loaded
+function addToolbar(){
+    // Identify which game (mini or midi)
+    const title = document.querySelector("div.xwd__details--title");
+
+    // add previous and next buttons to the title and date bar
+    // Title header classes:
+    // xwd__header--row xwd__header--fullwidth
+    const headerContainer = document.querySelector("div.xwd__header--row.xwd__header--fullwidth");
+
+    // add event to "play" button that adds font size controls
+    // play button classes:
+    //_momentButton_e4jbe_2
+    const playButton = document.querySelector("button._momentButton_e4jbe_2");
+
+    // check that the header and title exist, and the play button 
+    // prev and next buttons
+    if(title && headerContainer && playButton){    
+        // Isolate "Mini" or "Midi"
+        const currentGameName = title.innerHTML.slice(-4).toLowerCase();
+        
+        // Get the date from the current game's description text
+        currentGameDate = new Date(Date.parse(document.querySelector("div.xwd__details--date").textContent));
+        // Calculate the date for "tomorrow" and "yesterday"
+        yesterdayDate = new Date(currentGameDate.getTime()-dayMS);
+        tomorrowDate = new Date(currentGameDate.getTime()+dayMS);
+
+        // Create a div to contain the div with the prev and next game buttons
+        const buttonContainer = document.createElement("div");
+        buttonContainer.id = "button-container";
+        buttonContainer.classList = "xwd__header--puzzle-details-container";
+        buttonContainer.style = "display: grid; justify-content: center;";
+
+        const centeredDiv = document.createElement("div");
+        centeredDiv.id = "centered-div";
+
+        // create yesterday button
+        const yesterdayGameLinkButton = makeHeaderLinkButton(
+            `https://www.nytimes.com/crosswords/game/${currentGameName}/${yesterdayDate.toISOString().split("T")[0].replaceAll("-","/")}`,
+            "Yesterday's Puzzle"
+        );
+
+        // create tomorrow button
+        const tomorrowGameLinkButton = makeHeaderLinkButton(
+            `https://www.nytimes.com/crosswords/game/${currentGameName}/${tomorrowDate.toISOString().split("T")[0].replaceAll("-","/")}`,
+            "Tomorrow's Puzzle"
+        );
+
+        // create archive button
+        const archiveLinkButton = makeHeaderLinkButton(
+            `https://www.nytimes.com/crosswords/archive/${currentGameName}`,
+            "Archive"
+        );
+
+        // Add them to the parent div
+        centeredDiv.appendChild(yesterdayGameLinkButton);
+        centeredDiv.appendChild(tomorrowGameLinkButton);
+        centeredDiv.appendChild(archiveLinkButton);
+
+        // Then add to a parent div to collect
+        buttonContainer.appendChild(centeredDiv);
+
+        // Then add the parent div to the header to keep all the buttons in line and centered
+        headerContainer.appendChild(buttonContainer);
+
+        // Insert the text size controls when the user starts playing the game
+        playButton.addEventListener("click", insertTextSizeControls);
+
+        //console.log("Added all features!");
+
+        stopInterval();
+    } else {
+        //console.log("trying to add features again...");
+    }
+}
+
+// Function to make the buttons in the header (previous, next, archive)
+function makeHeaderLinkButton(link, title){
+    const linkButton = document.createElement("a");
+    linkButton.href = link;
+
+    const button = document.createElement("button");
+    button.textContent = title;
+    button.style.padding = "4px";
+    button.style.margin = "10px";
+
+    linkButton.appendChild(button);
+
+    return linkButton;
+}
+
+// Set the default initial font size for hints
+const initialFontSize = 20;
 
 async function insertTextSizeControls(){
     await delay(350);
@@ -87,85 +181,6 @@ async function insertTextSizeControls(){
         updateGameSettings();
     } else {
         //console.log("failed to add size button to toolbar");
-    }
-}
-
-//function to check for the toolbar to be loaded
-function addToolbar(){
-    // Identify which game (mini or midi)
-    const title = document.querySelector("div.xwd__details--title");
-
-    // add previous and next buttons to the title and date bar
-    // Title header classes:
-    // xwd__header--row xwd__header--fullwidth
-    const headerContainer = document.querySelector("div.xwd__header--row.xwd__header--fullwidth");
-
-    // add event to "play" button that adds font size controls
-    // play button classes:
-    //_momentButton_e4jbe_2
-    const playButton = document.querySelector("button._momentButton_e4jbe_2");
-
-    // prev and next buttons
-    if(title && headerContainer && playButton){    
-        // Isolate "Mini" or "Midi"
-        const currentGameName = title.innerHTML.slice(-4).toLowerCase();
-        
-        // Get the date from the current game's description text
-        currentGameDate = new Date(Date.parse(document.querySelector("div.xwd__details--date").textContent));
-        // Calculate the date for "tomorrow" and "yesterday"
-        tomorrowDate = new Date(currentGameDate.getTime()+dayMS);
-        yesterdayDate = new Date(currentGameDate.getTime()-dayMS);
-
-        // Create a div to contain the div with the prev and next game buttons
-        const buttonContainer = document.createElement("div");
-        buttonContainer.classList = "xwd__header--puzzle-details-container";
-        buttonContainer.style = "display: grid; justify-content: center;";
-
-        const centeredDiv = document.createElement("div");
-
-        // create tomorrow button
-        const tomorrowGameButtonLink = document.createElement("a");
-        tomorrowGameButtonLink.href = `https://www.nytimes.com/crosswords/game/${currentGameName}/${tomorrowDate.toISOString().split("T")[0].replaceAll("-","/")}`;
-        const tomorrowGameButton = document.createElement("button");
-        tomorrowGameButton.textContent = "Tomorrow's Puzzle";
-        tomorrowGameButton.style.padding = "4px";
-        tomorrowGameButton.style.margin = "10px";
-        tomorrowGameButtonLink.appendChild(tomorrowGameButton);
-
-        // create yesterday button
-        const yesterdayGameButtonLink = document.createElement("a");
-        yesterdayGameButtonLink.href = `https://www.nytimes.com/crosswords/game/${currentGameName}/${yesterdayDate.toISOString().split("T")[0].replaceAll("-","/")}`;
-        const yesterdayGameButton = document.createElement("button");
-        yesterdayGameButton.textContent = "Yesterday's Puzzle";
-        yesterdayGameButton.style.padding = "4px";
-        yesterdayGameButton.style.margin = "10px";
-        yesterdayGameButtonLink.appendChild(yesterdayGameButton);
-
-        // create archive button
-        const archiveButtonLink = document.createElement("a");
-        archiveButtonLink.href = `https://www.nytimes.com/crosswords/archive/${currentGameName}`;
-        const archiveButton = document.createElement("button");
-        archiveButton.textContent = "Archive";
-        archiveButton.style.padding = "4px";
-        archiveButton.style.margin = "10px";
-        archiveButtonLink.appendChild(archiveButton);
-
-        centeredDiv.appendChild(yesterdayGameButtonLink);
-        centeredDiv.appendChild(tomorrowGameButtonLink);
-        centeredDiv.appendChild(archiveButtonLink);
-
-        buttonContainer.appendChild(centeredDiv);
-
-        headerContainer.appendChild(buttonContainer);
-
-        // Insert the text size controls when the user starts playing the game
-        playButton.addEventListener("click", insertTextSizeControls);
-
-        //console.log("Added all features!");
-
-        stopInterval();
-    } else {
-        //console.log("trying to add features again...");
     }
 }
 
