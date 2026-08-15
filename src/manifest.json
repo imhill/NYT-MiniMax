@@ -17,11 +17,18 @@
 	},
 	"content_scripts": [
    		{
-      			"js": ["scripts/content.js"],
-      			"matches": [
-        			"https://www.nytimes.com/crosswords/game/mini*",
-					"https://www.nytimes.com/crosswords/game/midi*"
-      			]
-    		}
+			"js": ["scripts/gameContent.js"],
+			"matches": [
+				"https://www.nytimes.com/crosswords/game/mini*",
+				"https://www.nytimes.com/crosswords/game/midi*"
+			]
+		},
+		{
+			"js": ["scripts/archiveContent.js"],
+			"matches": [
+				"https://www.nytimes.com/crosswords/archive/mini*",
+				"https://www.nytimes.com/crosswords/archive/midi*"
+			]
+		}
   	]
 }
