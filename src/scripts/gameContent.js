@@ -30,6 +30,9 @@ function addToolbar(){
         
         // Get the date from the current game's description text
         currentGameDate = new Date(Date.parse(document.querySelector("div.xwd__details--date").textContent));
+        const currentYear = currentGameDate.getFullYear();
+        // Convert from 0 - 11 to 1 - 12
+        const currentMonth = currentGameDate.getMonth() + 1;
         // Calculate the date for "tomorrow" and "yesterday"
         yesterdayDate = new Date(currentGameDate.getTime()-dayMS);
         tomorrowDate = new Date(currentGameDate.getTime()+dayMS);
@@ -57,7 +60,7 @@ function addToolbar(){
 
         // create archive button
         const archiveLinkButton = makeHeaderLinkButton(
-            `https://www.nytimes.com/crosswords/archive/${currentGameName}`,
+            `https://www.nytimes.com/crosswords/archive/${currentGameName}/${currentYear}/${currentMonth}`,
             "Archive"
         );
 
@@ -312,6 +315,7 @@ function swapHintSide(){
         fullGameSection.appendChild(gameBoard);
         swapTabLabel.innerHTML = "&#10562;";
     }
+    console.log(`Swapped, new side ${currentHintSide}`);
 }
 
 //look for the toolbar every 100 miliseconds
