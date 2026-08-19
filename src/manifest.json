@@ -18,6 +18,7 @@
 	"content_scripts": [
    		{
 			"js": ["scripts/gameContent.js"],
+			"css": ["styles/gameContentStyles.css"],
 			"matches": [
 				"https://www.nytimes.com/crosswords/game/mini*",
 				"https://www.nytimes.com/crosswords/game/midi*"

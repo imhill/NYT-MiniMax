@@ -93,8 +93,7 @@ function makeHeaderLinkButton(link, title){
 
     const button = document.createElement("button");
     button.textContent = title;
-    button.style.padding = "4px";
-    button.style.margin = "10px";
+    button.classList.add("mm-header-link-button");
 
     linkButton.appendChild(button);
 
