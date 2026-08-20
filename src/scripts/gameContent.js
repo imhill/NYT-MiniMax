@@ -102,84 +102,89 @@ function makeHeaderLinkButton(link, title){
 
 // Set the default initial font size for hints
 const initialFontSize = 20;
+let hasRunBefore = false;
 
 async function insertTextSizeControls(){
-    await delay(350);
+    if(!hasRunBefore){
+        hasRunBefore = true;
 
-    // add font size control buttons to the control bar
-    // control bar classes: 
-    // xwd__toolbar--expandedMenu
-    const toolbar = document.querySelector("div.xwd__toolbar--expandedMenu");
+        await delay(250);
 
-    //if it exists, build the additional features
-    if (toolbar) {
-        //console.log("found toolbar");
+        // add font size control buttons to the control bar
+        // control bar classes: 
+        // xwd__toolbar--expandedMenu
+        const toolbar = document.querySelector("div.xwd__toolbar--expandedMenu");
 
-        //create a new list element for changing font size
-        const hintSizeToolbarElement = document.createElement("li");
-        hintSizeToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
-        hintSizeToolbarElement.id = "changeSizeTab";
+        //if it exists, build the additional features
+        if (toolbar) {
+            //console.log("found toolbar");
 
-        //create the button for the tab
-        const tabButton = document.createElement("button");
-        tabButton.type = "button";
-        tabButton.ariaLabel = "Hint Size";
-        tabButton.textContent = "Hint Size";
-        tabButton.addEventListener("click", displaySizeTab);
+            //create a new list element for changing font size
+            const hintSizeToolbarElement = document.createElement("li");
+            hintSizeToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+            hintSizeToolbarElement.id = "changeSizeTab";
 
-        //create the list for the objects in the tab
-        const optionList = document.createElement("ul");
-        optionList.className = "xwd__menu--container";
+            //create the button for the tab
+            const tabButton = document.createElement("button");
+            tabButton.type = "button";
+            tabButton.ariaLabel = "Hint Size";
+            tabButton.textContent = "Hint Size";
+            tabButton.addEventListener("click", displaySizeTab);
 
-        const titleListElement = document.createElement("li");
-        titleListElement.classList.add(...["xwd__menu--item", "xwd__menu--item-display"]);
+            //create the list for the objects in the tab
+            const optionList = document.createElement("ul");
+            optionList.className = "xwd__menu--container";
 
-        const fontSizeListElement = document.createElement("button");
-        fontSizeListElement.classList.add("xwd__menu--btnlink");
-        fontSizeListElement.id = "mm-hint-size-button";
+            const titleListElement = document.createElement("li");
+            titleListElement.classList.add(...["xwd__menu--item", "xwd__menu--item-display"]);
 
-        const hintSizeInput = document.createElement("input");
-        hintSizeInput.type = "number";
-        hintSizeInput.step = "2";
-        hintSizeInput.addEventListener("change",updateFontSize);
-        hintSizeInput.id = "mm-hint-size-input";
-        hintSizeInput.value = `${initialFontSize}`;
+            const fontSizeListElement = document.createElement("button");
+            fontSizeListElement.classList.add("xwd__menu--btnlink");
+            fontSizeListElement.id = "mm-hint-size-button";
 
-        const hintSizeLabel = document.createElement("label");
-        hintSizeLabel.innerText = "px.";
-        hintSizeLabel.htmlFor = "mm-hint-size-input";
+            const hintSizeInput = document.createElement("input");
+            hintSizeInput.type = "number";
+            hintSizeInput.step = "2";
+            hintSizeInput.addEventListener("change",updateFontSize);
+            hintSizeInput.id = "mm-hint-size-input";
+            hintSizeInput.value = `${initialFontSize}`;
 
-        fontSizeListElement.appendChild(hintSizeInput);
-        fontSizeListElement.appendChild(hintSizeLabel);
+            const hintSizeLabel = document.createElement("label");
+            hintSizeLabel.innerText = "px.";
+            hintSizeLabel.htmlFor = "mm-hint-size-input";
 
-        optionList.appendChild(fontSizeListElement);
+            fontSizeListElement.appendChild(hintSizeInput);
+            fontSizeListElement.appendChild(hintSizeLabel);
 
-        hintSizeToolbarElement.appendChild(tabButton);
-        hintSizeToolbarElement.appendChild(optionList);
+            optionList.appendChild(fontSizeListElement);
 
-        toolbar.appendChild(hintSizeToolbarElement);
+            hintSizeToolbarElement.appendChild(tabButton);
+            hintSizeToolbarElement.appendChild(optionList);
 
-        // create a new list element for swapping the hint and crossword
-        const swapToolbarElement = document.createElement("li");
-        swapToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
-        swapToolbarElement.id = "swapHintSide";
+            toolbar.appendChild(hintSizeToolbarElement);
 
-        //create the button for the tab
-        const swapTabButton = document.createElement("button");
-        swapTabButton.type = "button";
-        swapTabButton.ariaLabel = "Swap Hint Side";
-        swapTabButton.innerHTML = "&#10563;";
-        swapTabButton.style.fontSize = "32px";
-        swapTabButton.id = "swap-tab-label";
-        swapTabButton.addEventListener("click", swapHintSide);
+            // create a new list element for swapping the hint and crossword
+            const swapToolbarElement = document.createElement("li");
+            swapToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+            swapToolbarElement.id = "swapHintSide";
 
-        swapToolbarElement.appendChild(swapTabButton);
+            //create the button for the tab
+            const swapTabButton = document.createElement("button");
+            swapTabButton.type = "button";
+            swapTabButton.ariaLabel = "Swap Hint Side";
+            swapTabButton.innerHTML = "&#10563;";
+            swapTabButton.style.fontSize = "32px";
+            swapTabButton.id = "swap-tab-label";
+            swapTabButton.addEventListener("click", swapHintSide);
 
-        toolbar.appendChild(swapToolbarElement);
-        
-        updateGameSettings();
-    } else {
-        //console.log("failed to add size button to toolbar");
+            swapToolbarElement.appendChild(swapTabButton);
+
+            toolbar.appendChild(swapToolbarElement);
+            
+            updateGameSettings();
+        } else {
+            //console.log("failed to add size button to toolbar");
+        }
     }
 }
 
