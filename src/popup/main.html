@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="../styles/styles.css">
+        <link rel="stylesheet" href="../styles/popupStyles.css">
         <style>
             #birthday-message{
                 display: none;
@@ -10,7 +10,7 @@
     <body>
         <div id="tab-menu">
             <div id="buttons-section">
-                <div class="tab-button" id="home-button">Home</div>
+                <div class="tab-button selected-tab" id="home-button">Home</div>
                 <div class="tab-button" id="settings-button">Settings</div>
                 <div class="tab-button" id="about-button">About</div>
             </div>
@@ -19,54 +19,77 @@
         <hr>
 
         <div id="home-page">
-            <h1 class="section-header">Select Date:</h1>
+            <div id="hp-play-section">
+                <h2 class="section-description">Play</h2>
+                <h1 class="section-header">Select Date:</h1>
 
-            <input type="date" id="date-picker">
-            <a id="mini-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go to Mini</a>
-            <a id="midi-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Go to Midi</a>
+                <input type="date" id="date-picker">
 
-            <br>
+                <div id="game-buttons">
+                    <a id="mini-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/mini">Go to Mini</a>
 
-            <h1 class="section-header">Go to Archives:</h1>
+                    <a id="midi-link" class="link-button game-button" target="_blank" href="https://www.nytimes.com/crosswords/game/midi">Go to Midi</a>
+                </div>
+            </div>
 
-            <a id="mini-archive-link" class="link-button archive-button"  target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Mini Archives</a>
-            <a id="midi-archive-link" class="link-button archive-button" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Midi Archives</a>
+            <div id="hp-archive-section">
+                <h2 class="section-description">Archives</h2>
+                <h1 class="section-header">Go to Archives:</h1>
+
+                <a id="mini-archive-link" class="link-button archive-button"  target="_blank" href="https://www.nytimes.com/crosswords/archive/mini">Go to Mini Archives</a>
+
+                <a id="midi-archive-link" class="link-button archive-button" target="_blank" href="https://www.nytimes.com/crosswords/archive/midi">Go to Midi Archives</a>
+            </div>
         </div>
 
         <div id="settings-page" style="display: none;">
-            <div id="size-selector">
-                <h1 class="section-header">Preferred Size:</h1>
+            <div id="sp-crossword-settings">
+                <h2 class="section-description">Crossword Settings</h2>
 
-                <label for="size-input" class="settings-label">Size: </label>
-                <input type="number" id="size-input" value="20">
+                <div id="sp-size-section">
+                    <h1 class="section-header">Preferred Size:</h1>
+
+                    <label for="size-input" class="settings-label">Size: </label>
+                    <input type="number" id="size-input" value="20">
+                </div>
+
+                <div id="sp-side-section">
+                    <h1 class="section-header">Preferred Side:</h1>
+
+                    <label for ="left-side-input" class="settings-label">Left</label>
+                    <input type="radio" id="left-side-input" name="side-selection" value="Left">
+
+                    <input type="radio" id="right-side-input" name="side-selection" value="Right" checked>
+                    <label for="right-side-input" class="settings-label">Right</label>
+                </div>
             </div>
 
-            <div id="side-selector">
-                <h1 class="section-header">Preferred Side:</h1>
-
-                <label for ="left-side-input" class="settings-label">Left</label>
-                <input type="radio" id="left-side-input" name="side-selection" value="Left">
-                <input type="radio" id="right-side-input" name="side-selection" value="Right" checked>
-                <label for="right-side-input" class="settings-label">Right</label>
-            </div>
-
-            <br>
             <hr>
+            <!-- Dark mode currently not available
+            <div id="sp-extension-settings">
+                <h2 class="section-description">Extension Settings</h2>
 
-            <div id="dark-mode-selector">
-                <h1 class="section-header">Extension Dark Mode:</h1>
+                <div id="sp-dark-mode-section">
+                    <h1 class="section-header">Extension Dark Mode:</h1>
 
-                <label for="dark-mode-input" class="settings-label" id="dark-mode-label"></label>
-                <input type="checkbox" id="dark-mode-input">
+                    <label for="dark-mode-input" class="settings-label" id="dark-mode-label"></label>
+                    <input type="checkbox" id="dark-mode-input">
+                </div>
             </div>
+            -->
         </div>
 
         <div id="about-page" style="display: none;">
             <img id="extension-icon" src="../icons/logo128.png">
             <div id="extension-info">
-                <p>Name: NYT MiniMax</p>
-                <br>
-                <p>Version: X.X.XX</p>
+                <div id="ei-name">
+                    <p class="info-title">Name: </p>
+                    <p class="info-data">MiniMax</p>
+                </div>
+                <div id="ei-version">
+                    <p class="info-title">Version: </p>
+                    <p class="info-data">X.X.X</p>
+                </div>
             </div>
         </div>
 

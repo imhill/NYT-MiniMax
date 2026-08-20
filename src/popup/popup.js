@@ -33,10 +33,10 @@ const tabs = {"home":{"button": homeButton, "tab":homeTab},
 function switchTab(tabName){
     for(const tab in tabs){
         if(tab == tabName){
-            tabs[tab]["button"].style.fontWeight = "bold";
+            tabs[tab]["button"].classList.add("selected-tab");
             tabs[tab]["tab"].style.display = "block";
         } else {
-            tabs[tab]["button"].style.fontWeight = "400";
+            tabs[tab]["button"].classList.remove("selected-tab");
             tabs[tab]["tab"].style.display = "none";
         }
     }
@@ -92,7 +92,7 @@ sizeInput.value = userPreferredSize;
 
 // Implement the user hint side preference
 // Values: 1 = right, -1 = left
-const sideInput = document.getElementById("side-selector");
+const sideInput = document.getElementById("sp-side-section");
 sideInput.addEventListener("change",updateSide);
 
 async function updateSide(event){
@@ -160,8 +160,17 @@ if(userDarkMode){
 const infoSection = document.getElementById("extension-info");
 
 const manifest = chrome.runtime.getManifest();
-const extensionName = "NYT MiniMax";
+const extensionName = "MiniMax";
 const extensionVersion = manifest.version;
 
-infoSection.innerHTML = `<p class="info-title">Name: </p><p class="info-data">${extensionName}</p><br><p class="info-title">Version: </p><p class="info-data">${extensionVersion}</p>`;
+infoSection.innerHTML = `<div id="extension-info">
+                            <div id="ei-name">
+                                <p class="info-title">Name: </p>
+                                <p class="info-data">${extensionName}</p>
+                            </div>
+                            <div id="ei-version">
+                                <p class="info-title">Version: </p>
+                                <p class="info-data">${extensionVersion}</p>
+                            </div>
+                        </div>`
 //
