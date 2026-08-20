@@ -5,12 +5,6 @@ html{
 
     /* Define colors to be used */
     --miniColor: rgb(149, 190, 250);
-    --buttonBackgroundColor: #f8f8f8;
-    --buttonHoverBackgroundColor: #e4e4e4;
-    --buttonActiveBackgroundColor: #000;
-    --buttonTextColor: #000;
-    --buttonActiveTextColor: #fff;
-    --buttonBorderColor: #e2e2e2;
 
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -20,36 +14,49 @@ body{
     margin: 2px;
 
     --backgroundColor: #FFF;
-    --borderColor: #000;
+
     --primaryTextColor: rgb(0, 38, 92);
     --secondaryTextColor: rgb(80, 135, 217);
     --tertiaryTextColor: rgb(167, 202, 255);
-    --inputBoxBackgroundColor: #FFF;
+
+    --buttonBorderColor: #e2e2e2;
+    --buttonBackgroundColor: #f8f8f8;
+    --buttonHoverBackgroundColor: #e4e4e4;
+    --buttonActiveBackgroundColor: #000;
+    --buttonTextColor: #000;
+    --buttonActiveTextColor: #fff;
 
     background-color: var(--backgroundColor);
     color: var(--primaryTextColor);
 }
 
 body.dark-mode{
-    --textColor: #DDD;
     --backgroundColor: #222;
-    --borderColor: #DDD;
-    --tertiaryTextColor: #888;
-    --inputBoxBackgroundColor: #333;
+
+    --primaryTextColor: rgb(167, 202, 255);
+    --secondaryTextColor: rgb(80, 135, 217);
+    --tertiaryTextColor: rgb(20, 60, 120);
+
+    --buttonBorderColor: #323232;
+    --buttonBackgroundColor: #282828;
+    --buttonHoverBackgroundColor: #3c3c3c;
+    --buttonActiveBackgroundColor: #fff;
+    --buttonTextColor: #ddd;
+    --buttonActiveTextColor: #000;
 
     background-color: var(--backgroundColor);
-    color: var(--textColor);
+    color: var(--primaryTextColor);
 }
 
 input{
     border: 1px solid var(--buttonBorderColor);
     background-color: var(--buttonBackgroundColor);
-    color: #333;
+    color: var(--buttonTextColor);
+
     font-family: Arial, Helvetica, sans-serif;
 }
 input:hover, input:focus{
     background-color: var(--buttonHoverBackgroundColor);
-    color: #000;
 }
 
 hr {
