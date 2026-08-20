@@ -130,32 +130,29 @@ async function insertTextSizeControls(){
         //create the list for the objects in the tab
         const optionList = document.createElement("ul");
         optionList.className = "xwd__menu--container";
-        optionList.style.width = "120px";
-        optionList.style.fontSize = "20px";
 
         const titleListElement = document.createElement("li");
         titleListElement.classList.add(...["xwd__menu--item", "xwd__menu--item-display"]);
 
-        const titleListText = document.createElement("p");
-        titleListText.textContent = "Current Size";
+        const fontSizeListElement = document.createElement("button");
+        fontSizeListElement.classList.add("xwd__menu--btnlink");
+        fontSizeListElement.id = "mm-hint-size-button";
 
-        const inputListElement = document.createElement("li");
-        titleListElement.classList.add(...["xwd__menu--item", "xwd__menu--item-display"]);
+        const hintSizeInput = document.createElement("input");
+        hintSizeInput.type = "number";
+        hintSizeInput.step = "2";
+        hintSizeInput.addEventListener("change",updateFontSize);
+        hintSizeInput.id = "mm-hint-size-input";
+        hintSizeInput.value = `${initialFontSize}`;
 
-        const inputListInput = document.createElement("input");
-        inputListInput.type = "number";
-        inputListInput.step = "2";
-        inputListInput.addEventListener("change",updateFontSize);
-        inputListInput.id = "sizeInput";
-        inputListInput.value = `${initialFontSize}`;
-        inputListInput.className = "xwd__menu--btnlink";
-        inputListInput.style.width = "4em";
+        const hintSizeLabel = document.createElement("label");
+        hintSizeLabel.innerText = "px.";
+        hintSizeLabel.htmlFor = "mm-hint-size-input";
 
-        inputListElement.appendChild(inputListInput);
-        titleListElement.appendChild(titleListText);
+        fontSizeListElement.appendChild(hintSizeInput);
+        fontSizeListElement.appendChild(hintSizeLabel);
 
-        optionList.appendChild(titleListElement);
-        optionList.appendChild(inputListInput);
+        optionList.appendChild(fontSizeListElement);
 
         hintSizeToolbarElement.appendChild(tabButton);
         hintSizeToolbarElement.appendChild(optionList);
@@ -190,7 +187,7 @@ async function insertTextSizeControls(){
 function updateFontSize(){
     //select the hint list element and the input for the font size
     const hintList = document.querySelector("section.xwd__layout--cluelists");
-    const sizeInput = document.getElementById("sizeInput");
+    const sizeInput = document.getElementById("mm-hint-size-input");
 
     //update the font size
     hintList.style.fontSize = `${sizeInput.value}px`;
@@ -241,7 +238,7 @@ async function updateGameSettings(){
 
     //select the hint list element and the input for the font size
     const hintList = document.querySelector("section.xwd__layout--cluelists");
-    const sizeInput = document.getElementById("sizeInput");
+    const sizeInput = document.getElementById("mm-hint-size-input");
 
     //update the font size
     hintList.style.fontSize = `${userPreferredSize}px`;
