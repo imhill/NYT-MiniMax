@@ -122,7 +122,7 @@ async function insertTextSizeControls(){
             //create a new list element for changing font size
             const hintSizeToolbarElement = document.createElement("li");
             hintSizeToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
-            hintSizeToolbarElement.id = "changeSizeTab";
+            hintSizeToolbarElement.id = "mm-hint-size-tab";
 
             //create the button for the tab
             const tabButton = document.createElement("button");
@@ -208,7 +208,7 @@ async function userSettingsUpdated(changes){
 
                 //select the hint list element and the input for the font size
                 const hintList = document.querySelector("section.xwd__layout--cluelists");
-                const sizeInput = document.getElementById("sizeInput");
+                const sizeInput = document.getElementById("mm-hint-size-input");
 
                 //update the font size
                 hintList.style.fontSize = `${userPreferredSize}px`;
@@ -266,7 +266,7 @@ async function updateGameSettings(){
 
 //function to display the tab when the button is clicked on
 function displaySizeTab(){
-    const tab = document.getElementById("changeSizeTab");
+    const tab = document.getElementById("mm-hint-size-tab");
 
     if(tab.classList.contains("xwd__tool--open")){
         tab.classList.remove("xwd__tool--open");
@@ -333,3 +333,13 @@ setTimeout(stopInterval, 3000);
 
 // Find and update user saved size settings on change
 chrome.storage.sync.onChanged.addListener(userSettingsUpdated);
+
+
+
+// Add "Best time: " message to completion screen
+/*
+<div class="xwd__center mini__congrats-modal--message">You solved <span class="xwd__bold">The Mini</span><br> <span>in <span class="xwd__bold">2:25</span>.</span></div>
+*/
+
+/* <div class="pz-game-screen" id="js-hook-pz-moment__game"><div class="pz-game-toolbar xwd__hide-when-no-data"><div class="pz-row"><div class="pz-module pz-flex-row pz-game-toolbar-content" id="portal-game-toolbar"></div></div></div><div id="portal-game-modals"></div><div class="pz-game-field" id="pz-game-root"><div class="_container_mlx7l_1 xwd-moment-container"><div class="_moment_mlx7l_10" style="background: var(--bg-moment); transition-duration: 400ms;"><div class="pz-moment xwd__congrats-moment CongratsMoment-module_wrapper__GMYHg" data-testid="moment-wrapper" style="background-color: rgb(255, 255, 255);"><div role="dialog" aria-modal="true" class="modal-system-container xwd__congrats-container" data-testid="modal-wrapper" aria-label="modal"><div class="xwd__modal--wrapper"><div id="modalWrapper-overlay" class="xwd__modal--overlay"></div><div class="xwd__modal--body xwd__congrats-modal" tabindex="0" data-testid="modal-body" style="--modal-animation-duration: 200ms;"><button type="button" aria-label="Back to puzzle" class="xwd__modal--close" data-testid="modal-close">Back to puzzle<i class="pz-icon pz-icon-close"></i></button><article class="xwd__modal--content"><div class="mini__congrats-modal--content"><div data-star="false" data-testid="puzzle-icon" class="mini__puzzle-icon xwd__mini-progress--blue-star"></div><h1 class="pz-moment__title large karnak">Congratulations!</h1><div class="xwd__center mini__congrats-modal--message">You solved <span class="xwd__bold">The Mini</span><br> <span>in <span class="xwd__bold">2:25</span>.</span></div><div class="xwd__modal--button-container mini__congrats-modal--buttons-wrapper"><button type="button" aria-disabled="false" class="pz-moment__button primary default">Share your results</button></div></div>
+*/
