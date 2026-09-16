@@ -1,4 +1,4 @@
-console.log("SW Started!");
+//console.log("SW Started!");
 
 // First, get the current puzzle's id, then wait for the game to post, and check if puzzle is completed, then insert best time text into modal
 
@@ -13,7 +13,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         const method = details.method;
 
         if (url.includes("/svc/games/state") && initiator == "https://www.nytimes.com" && method == "POST") {
-            console.log("prefired");
+            //console.log("prefired");
 
             let rawStringData;
             let jsonData;
@@ -22,7 +22,7 @@ chrome.webRequest.onBeforeRequest.addListener(
                 rawStringData = details.requestBody.raw.map(element => decoder.decode(element.bytes)).join("");
                 jsonData = JSON.parse(rawStringData);
             } catch (e) {
-                console.log(`Error: ${e}`);
+                //console.log(`Error: ${e}`);
             }
 
             playTime[details.requestId] = jsonData["game_data"]["playTimeSeconds"];
@@ -40,8 +40,8 @@ chrome.webRequest.onCompleted.addListener(
         const method = details.method;
 
         if (url.includes("/svc/games/state") && initiator == "https://www.nytimes.com" && method == "POST") {
-            console.log("HOORAY!!!!!");
-            console.log(details);
+            //console.log("HOORAY!!!!!");
+            //console.log(details);
 
             await updateFastestTime;
 
@@ -50,7 +50,7 @@ chrome.webRequest.onCompleted.addListener(
 
                 const isNewBestTime = (playTime[details.requestId] <= userFastestTime);
 
-                console.log(`${playTime[details.requestId]}, ${userFastestTime}, ${isNewBestTime}`);
+                //console.log(`${playTime[details.requestId]}, ${userFastestTime}, ${isNewBestTime}`);
 
                 delete playTime[details.requestId];
 

@@ -82,7 +82,7 @@ function addToolbar(){
 
         // Insert the text size controls when the user starts playing the game
         playButton.addEventListener("click", insertTextSizeControls);
-        console.log("added listener");
+        //console.log("added listener");
 
         //console.log("Added all features!");
 
@@ -111,7 +111,7 @@ const initialFontSize = 20;
 let hasRunBefore = false;
 
 async function insertTextSizeControls(){
-    console.log("inserting text controls");
+    //console.log("inserting text controls");
     if(!hasRunBefore){
         hasRunBefore = true;
 
@@ -260,6 +260,8 @@ async function insertTextSizeControls(){
 
             secondToolbar.insertBefore(additionalButtonsDiv, secondToolbar.children[4]);
         }
+
+        updateFontSize();
     }
 }
 
@@ -391,7 +393,7 @@ function swapHintSide(){
         fullGameSection.appendChild(gameBoard);
         swapTabLabel.innerHTML = "&#10562;";
     }
-    console.log(`Swapped, new side ${currentHintSide}`);
+    //console.log(`Swapped, new side ${currentHintSide}`);
 }
 
 //look for the toolbar every 100 miliseconds
@@ -428,13 +430,13 @@ chrome.runtime.onMessage.addListener((message) => {
             const bestTimeText = (bestTime > 60) ? `${Math.trunc(bestTime / 60)}:${String(bestTime % 60).padStart(2,"0")}` : `${bestTime} seconds`; 
 
             const newBestTime = message["isNewBestTime"];
-            console.log(newBestTime);
+            //console.log(newBestTime);
 
             if(!newBestTime){
-                console.log("inserting not best");
+                //console.log("inserting not best");
                 bestTimeDiv.innerHTML = `<br>Best time: <span class="xwd__bold">${bestTimeText}.</span>`;
             } else {
-                console.log("inserting  best");
+                //console.log("inserting  best");
                 const congratsTextDiv = document.querySelector("h1.pz-moment__title.large.karnak");
 
                 const newBestTimeDiv = document.createElement("div");
