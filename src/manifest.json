@@ -8,8 +8,12 @@
 	},
 	"description": "Add-on to increase font size for NYT Crossword Games, easier navigation, and other QOL improvements.",
 	"permissions": [
-    	"storage"
+    	"storage",
+		"webRequest"
   	],
+	"host_permissions": [
+		"*://*.nytimes.com/*"
+	],
 	"action": {
 		"default_popup": "popup/main.html",
 		"default_icon": "icons/logo128.png",
@@ -31,5 +35,9 @@
 				"https://www.nytimes.com/crosswords/archive/midi*"
 			]
 		}
-  	]
+  	],
+	"background": {
+		"service_worker": "scripts/serviceWorker.js"
+	}
+
 }

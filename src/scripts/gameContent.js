@@ -10,7 +10,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 //function to check for the toolbar to be loaded
 function addToolbar(){
     // Identify which game (mini or midi)
-    const title = document.querySelector("div.xwd__details--title");
+    const title = document.querySelector("h1.xwd__details--title");
 
     // add previous and next buttons to the title and date bar
     // Title header classes:
@@ -20,11 +20,14 @@ function addToolbar(){
     // add event to "play" button that adds font size controls
     // play button classes:
     //_momentButton_e4jbe_2
+    // "view solved puzzle" button _momentButton_e4jbe_2 _primary_e4jbe_37 _extraExtraWide_e4jbe_30
+    // _momentButton_e4jbe_2 _primary_e4jbe_37 _extraExtraWide_e4jbe_30
     const playButton = document.querySelector("button._momentButton_e4jbe_2");
 
     // check that the header and title exist, and the play button 
     // prev and next buttons
-    if(title && headerContainer && playButton){    
+    if(title && headerContainer && playButton){  
+        
         // Isolate "Mini" or "Midi"
         const currentGameName = title.innerHTML.slice(-4).toLowerCase();
         
@@ -58,6 +61,8 @@ function addToolbar(){
             "Tomorrow's Puzzle"
         );
 
+        // Go to mini archive from actual crossword
+        //<a href="/crosswords/archive/mini" class="css-zovycv"><div role="img" aria-label="The Mini Archive" class="css-zqj0bx"></div><p>The Mini Archive</p><span class="css-sv65wy"></span></a>
         // create archive button
         const archiveLinkButton = makeHeaderLinkButton(
             `https://www.nytimes.com/crosswords/archive/${currentGameName}/${currentYear}/${currentMonth}`,
@@ -77,12 +82,13 @@ function addToolbar(){
 
         // Insert the text size controls when the user starts playing the game
         playButton.addEventListener("click", insertTextSizeControls);
+        console.log("added listener");
 
         //console.log("Added all features!");
 
         stopInterval();
     } else {
-        //console.log("trying to add features again...");
+        //console.log(`trying to add features again... {title:${title}, headerContainer:${headerContainer}, playButton:${playButton}}`);
     }
 }
 
@@ -105,6 +111,7 @@ const initialFontSize = 20;
 let hasRunBefore = false;
 
 async function insertTextSizeControls(){
+    console.log("inserting text controls");
     if(!hasRunBefore){
         hasRunBefore = true;
 
@@ -183,7 +190,75 @@ async function insertTextSizeControls(){
             
             updateGameSettings();
         } else {
-            //console.log("failed to add size button to toolbar");
+            const secondToolbar = document.querySelector("ul.xwd__toolbar--tools");
+
+            const additionalButtonsDiv = document.createElement("div");
+            additionalButtonsDiv.className = "xwd__toolbar--expandedMenu";
+
+            //create a new list element for changing font size
+            const hintSizeToolbarElement = document.createElement("li");
+            hintSizeToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+            hintSizeToolbarElement.id = "mm-hint-size-tab";
+
+            //create the button for the tab
+            const tabButton = document.createElement("button");
+            tabButton.type = "button";
+            tabButton.ariaLabel = "Hint Size";
+            tabButton.textContent = "Hint Size";
+            tabButton.addEventListener("click", displaySizeTab);
+
+            //create the list for the objects in the tab
+            const optionList = document.createElement("ul");
+            optionList.className = "xwd__menu--container";
+
+            const titleListElement = document.createElement("li");
+            titleListElement.classList.add(...["xwd__menu--item", "xwd__menu--item-display"]);
+
+            const fontSizeListElement = document.createElement("button");
+            fontSizeListElement.classList.add("xwd__menu--btnlink");
+            fontSizeListElement.id = "mm-hint-size-button";
+
+            const hintSizeInput = document.createElement("input");
+            hintSizeInput.type = "number";
+            hintSizeInput.step = "2";
+            hintSizeInput.addEventListener("change",updateFontSize);
+            hintSizeInput.id = "mm-hint-size-input";
+            hintSizeInput.value = `${initialFontSize}`;
+
+            const hintSizeLabel = document.createElement("label");
+            hintSizeLabel.innerText = "px.";
+            hintSizeLabel.htmlFor = "mm-hint-size-input";
+
+            fontSizeListElement.appendChild(hintSizeInput);
+            fontSizeListElement.appendChild(hintSizeLabel);
+
+            optionList.appendChild(fontSizeListElement);
+
+            hintSizeToolbarElement.appendChild(tabButton);
+            hintSizeToolbarElement.appendChild(optionList);
+
+            additionalButtonsDiv.appendChild(hintSizeToolbarElement);
+
+            // create a new list element for swapping the hint and crossword
+            const swapToolbarElement = document.createElement("li");
+            swapToolbarElement.classList.add(...["xwd__tool--button", "xwd__tool--texty"]);
+            swapToolbarElement.id = "swapHintSide";
+
+            //create the button for the tab
+            const swapTabButton = document.createElement("button");
+            swapTabButton.type = "button";
+            swapTabButton.ariaLabel = "Swap Hint Side";
+            swapTabButton.innerHTML = "&#10563;";
+            swapTabButton.style.fontSize = "32px";
+            swapTabButton.id = "swap-tab-label";
+            swapTabButton.addEventListener("click", swapHintSide);
+
+            swapToolbarElement.appendChild(swapTabButton);
+
+            additionalButtonsDiv.appendChild(swapToolbarElement);
+            // insert to index 4
+
+            secondToolbar.insertBefore(additionalButtonsDiv, secondToolbar.children[4]);
         }
     }
 }
@@ -329,12 +404,51 @@ function stopInterval(){
 }
 
 //stop searching after a few seconds
-setTimeout(stopInterval, 3000);
+setTimeout(stopInterval, 10000);
 
 // Find and update user saved size settings on change
 chrome.storage.sync.onChanged.addListener(userSettingsUpdated);
 
+let insertedBestTime = false;
 
+chrome.runtime.onMessage.addListener((message) => {
+    //console.log("Message received in content script:", message);
+  
+    if (message["statePostDetected"] == true) {
+        // Insert best puzzle solve to congrats-modal
+        const congratsModalMessage = document.querySelector("div.mini__congrats-modal--message");
+
+        if(congratsModalMessage && !insertedBestTime){
+            insertedBestTime = true;
+
+            const bestTimeDiv = document.createElement("div");
+
+            const bestTime = message["bestTime"];
+
+            const bestTimeText = (bestTime > 60) ? `${Math.trunc(bestTime / 60)}:${String(bestTime % 60).padStart(2,"0")}` : `${bestTime} seconds`; 
+
+            const newBestTime = message["isNewBestTime"];
+            console.log(newBestTime);
+
+            if(!newBestTime){
+                console.log("inserting not best");
+                bestTimeDiv.innerHTML = `<br>Best time: <span class="xwd__bold">${bestTimeText}.</span>`;
+            } else {
+                console.log("inserting  best");
+                const congratsTextDiv = document.querySelector("h1.pz-moment__title.large.karnak");
+
+                const newBestTimeDiv = document.createElement("div");
+                newBestTimeDiv.innerHTML = `New best time!`;
+
+                congratsTextDiv.appendChild(newBestTimeDiv);
+
+                bestTimeDiv.innerHTML = `<br>Previous best time: <span class="xwd__bold">${bestTimeText}.</span>`;
+            }
+
+            congratsModalMessage.appendChild(bestTimeDiv);
+        }
+    }
+  });
 
 // Add "Best time: " message to completion screen
 /*
