@@ -43,19 +43,22 @@ chrome.webRequest.onCompleted.addListener(
             //console.log("HOORAY!!!!!");
             //console.log(details);
 
-            await updateFastestTime;
+            await updateFastestTime();
 
             try {
                 const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
                 const isNewBestTime = (playTime[details.requestId] <= userFastestTime);
 
-                //console.log(`${playTime[details.requestId]}, ${userFastestTime}, ${isNewBestTime}`);
+                console.log(`${playTime[details.requestId]}, ${userFastestTime}, ${isNewBestTime}`);
 
                 delete playTime[details.requestId];
 
                 if (tab.id) {
-                    chrome.tabs.sendMessage(tab.id, {"statePostDetected": true, "bestTime": userFastestTime, "isNewBestTime": isNewBestTime});
+                    chrome.tabs.sendMessage(tab.id, {"statePostDetected": true,
+                                                     "bestTime": userFastestTime, 
+                                                     "isNewBestTime": isNewBestTime,
+                                                     "averageTime": userAverageTime});
                 }
             } catch (err) {
                 console.error(err);
@@ -67,10 +70,12 @@ chrome.webRequest.onCompleted.addListener(
 );
 
 let userFastestTime = 0;
+let userAverageTime = 0;
 async function updateFastestTime(){
     const gameIdResponse = await fetch("https://www.nytimes.com/svc/games/state/crossword_mini/latests");
     const gameIdData = await gameIdResponse.json();
     userFastestTime = gameIdData.player.stats.crossword_mini.bestTimeSeconds;
+    userAverageTime = gameIdData.player.stats.crossword_mini.avgTimeSeconds;
 }
 
 updateFastestTime();

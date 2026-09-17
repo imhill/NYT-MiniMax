@@ -420,34 +420,54 @@ chrome.runtime.onMessage.addListener((message) => {
         // Insert best puzzle solve to congrats-modal
         const congratsModalMessage = document.querySelector("div.mini__congrats-modal--message");
 
+        // Also insert average time
         if(congratsModalMessage && !insertedBestTime){
+
             insertedBestTime = true;
 
             const bestTimeDiv = document.createElement("div");
+            const averageTimeDiv = document.createElement("div");
 
             const bestTime = message["bestTime"];
+            
+            const averageTime = message["averageTime"];
 
             const bestTimeText = (bestTime > 60) ? `${Math.trunc(bestTime / 60)}:${String(bestTime % 60).padStart(2,"0")}` : `${bestTime} seconds`; 
+
+            const averageTimeText = (averageTime > 60) ? `${Math.trunc(averageTime / 60)}:${String(averageTime % 60).padStart(2,"0")}` : `${averageTime} seconds`; 
+
+            //console.log(`BTT:${bestTimeText}, ATT:${averageTimeText}`);
 
             const newBestTime = message["isNewBestTime"];
             //console.log(newBestTime);
 
-            if(!newBestTime){
-                //console.log("inserting not best");
-                bestTimeDiv.innerHTML = `<br>Best time: <span class="xwd__bold">${bestTimeText}.</span>`;
-            } else {
-                //console.log("inserting  best");
-                const congratsTextDiv = document.querySelector("h1.pz-moment__title.large.karnak");
-
-                const newBestTimeDiv = document.createElement("div");
-                newBestTimeDiv.innerHTML = `New best time!`;
-
-                congratsTextDiv.appendChild(newBestTimeDiv);
-
-                bestTimeDiv.innerHTML = `<br>Previous best time: <span class="xwd__bold">${bestTimeText}.</span>`;
+            // If bestTime == 0, meaning we haven't started yet but the modal exists, don't insert it since this means we are replaying
+            if(bestTime != 0){
+                //console.log("Inserting");
+                if(!newBestTime){
+                    //console.log("inserting not best");
+                    bestTimeDiv.innerHTML = `<br>Best time: <span class="xwd__bold">${bestTimeText}.</span>`;
+                    
+                    // Until NYT fixes their average calculations, this won't be added since it basically just returns the last first-attempt puzzle completion time
+                    //averageTimeDiv.innerHTML = `Average time: <span class="xwd__bold">${averageTimeText}.</span>`;
+                } else {
+                    //console.log("inserting  best");
+                    const congratsTextDiv = document.querySelector("h1.pz-moment__title.large.karnak");
+    
+                    const newBestTimeDiv = document.createElement("div");
+                    newBestTimeDiv.innerHTML = `New best time!`;
+    
+                    congratsTextDiv.appendChild(newBestTimeDiv);
+    
+                    bestTimeDiv.innerHTML = `<br>Previous best time: <span class="xwd__bold">${bestTimeText}.</span>`;
+                    
+                    // Until NYT fixes their average calculations, this won't be added since it basically just returns the last first-attempt puzzle completion time
+                    //averageTimeDiv.innerHTML = `Average time: <span class="xwd__bold">${averageTimeText}.</span>`;
+                }
             }
 
             congratsModalMessage.appendChild(bestTimeDiv);
+            congratsModalMessage.appendChild(averageTimeDiv);
         }
     }
   });
