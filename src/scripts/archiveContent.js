@@ -22,13 +22,13 @@ function getCurrentMonthAndYear(){
 }
 
 // Get this month's times
-async function getTimes(month, year){
-    const baseLink = "https://www.nytimes.com/svc/games/v1/archive/crossword_mini";
+async function getTimes(month, year, game){
+    const baseLink = "https://www.nytimes.com/svc/games/v1/archive/crossword_";
 
     const paddedMonth = String(month).padStart(2,"0");
     const daysInMonth = new Date(year, month, 0).getDate();
 
-    const gameIDResponse = await fetch(`${baseLink}/${year}-${paddedMonth}-01/${year}-${paddedMonth}-${daysInMonth}`);
+    const gameIDResponse = await fetch(`${baseLink}${game}/${year}-${paddedMonth}-01/${year}-${paddedMonth}-${daysInMonth}`);
     const gameIDData = await gameIDResponse.json();
 
     //console.log(gameIDData);
@@ -119,11 +119,35 @@ function insertAverageTime(){
     }
 }
 
-const gameIDs = {};
+function setGameToMini(){
+    setGame("mini");
+    //console.log("mini pressed");
+}
+
+function setGameToMidi(){
+    setGame("midi");
+}
+
+function setGameToDaily(){
+    setGame("daily");
+}
+
+function setGameToBonus(){
+    setGame("bonus");
+}
+
+function setGame(gameName){
+    currentGame = gameName;
+}
+
+let currentGame = "mini";
+function getCurrentGame(){
+    return currentGame;
+}
 
 
 function doItAll(){
-    getTimes(...getCurrentMonthAndYear());
+    getTimes(...getCurrentMonthAndYear(), getCurrentGame());
 }
 
 async function doItAllDelayed(){
@@ -131,7 +155,12 @@ async function doItAllDelayed(){
     doItAll();
 }
 
-function addEventListeners(){
+async function addEventListeners(){
+    await delay(800);
+    
+    // Game buttons class: tab__tab
+    const gameButtons = document.getElementsByClassName("tab__tab");
+
     //archive_prev
     const prevButton = document.getElementsByClassName("archive_prev");
 
@@ -149,12 +178,33 @@ function addEventListeners(){
     //console.log(nextButton);
     //console.log(archiveDropdowns);
 
-    const archiveNavButtons = [...prevButton, ...todayButton, ...nextButton, ...archiveDropdowns];
+    const archiveNavButtons = [...prevButton, ...todayButton, ...nextButton, ...archiveDropdowns, ...gameButtons];
 
     // Add event listeners to switching the month/year
     for(const button of archiveNavButtons){
         //console.log(button.tagName);
+        
         switch(button.tagName){
+            case "A":
+                // Allow for specific control if needed
+                //console.log(button.innerText.split("\n")[0]);
+                switch(button.innerText.split("\n")[0]){
+                    case "Mini":
+                        button.addEventListener("click",setGameToMini);
+                        break;
+                    case "Midi":
+                        button.addEventListener("click",setGameToMidi);
+                        break;
+                    case "Daily":
+                        button.addEventListener("click",setGameToDaily);
+                        break;
+                    case "Bonus":
+                        button.addEventListener("click",setGameToBonus);
+                        break;
+                }
+
+                button.addEventListener("click", doItAllDelayed);
+                break;
             case "BUTTON":
                 button.addEventListener("click", doItAllDelayed);
                 break;
