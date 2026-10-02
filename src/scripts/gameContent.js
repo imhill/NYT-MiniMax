@@ -432,7 +432,7 @@ chrome.runtime.onMessage.addListener((message) => {
             
             const averageTime = message["averageTime"];
 
-            const bestTimeText = (bestTime > 60) ? `${Math.trunc(bestTime / 60)}:${String(bestTime % 60).padStart(2,"0")}` : `${bestTime} seconds`; 
+            const bestTimeText = (bestTime >= 60) ? `${Math.trunc(bestTime / 60)}:${String(bestTime % 60).padStart(2,"0")}` : `${bestTime} seconds`; 
 
             const averageTimeText = (averageTime > 60) ? `${Math.trunc(averageTime / 60)}:${String(averageTime % 60).padStart(2,"0")}` : `${averageTime} seconds`; 
 
