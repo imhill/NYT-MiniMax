@@ -1,3 +1,5 @@
+MAXDEPTH = 15;
+
 // function to wait for some time (in ms)
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -12,23 +14,33 @@ function removeAds(){
 }
 
 // Get current month/year
-function getCurrentMonthAndYear(){
+async function getCurrentMonthAndYear(depth){
     const archiveDropdowns = document.getElementsByClassName("archive_dropdown");
 
-    const monthValue = String(Number(archiveDropdowns[0].value) + 1).padStart(2,"0");
-    const yearValue = archiveDropdowns[1].value;
+    if(archiveDropdowns.length > 0){
+        const monthValue = String(Number(archiveDropdowns[0].value) + 1).padStart(2,"0");
+        const yearValue = archiveDropdowns[1].value;
 
-    return [monthValue, yearValue]
+        return [monthValue, yearValue];
+    } else {
+        console.log("Failed to get current year/month");
+        if(depth < MAXDEPTH){
+            await delay(100);
+            return getCurrentMonthAndYear(depth + 1);
+        } else {
+            return [0,0];
+        }
+    }
 }
 
 // Get this month's times
 async function getTimes(month, year, game){
-    const baseLink = "https://www.nytimes.com/svc/games/v1/archive/crossword_";
+    const baseLink = `https://www.nytimes.com/svc/games/v1/archive/crossword_${game}`;
 
     const paddedMonth = String(month).padStart(2,"0");
     const daysInMonth = new Date(year, month, 0).getDate();
 
-    const gameIDResponse = await fetch(`${baseLink}${game}/${year}-${paddedMonth}-01/${year}-${paddedMonth}-${daysInMonth}`);
+    const gameIDResponse = await fetch(`${baseLink}/${year}-${paddedMonth}-01/${year}-${paddedMonth}-${daysInMonth}`);
     const gameIDData = await gameIDResponse.json();
 
     //console.log(gameIDData);
@@ -43,7 +55,7 @@ async function getTimes(month, year, game){
         idList.push(datesToIDs[date]);
     }
 
-    const latestsLink = "https://www.nytimes.com/svc/games/state/crossword_mini/latests?puzzle_ids=";
+    const latestsLink = `https://www.nytimes.com/svc/games/state/crossword_${game}/latests?puzzle_ids=`;
 
     const latestsResponse = await fetch(`${latestsLink}${idList.join(",")}`);
     const latestsData = await latestsResponse.json();
@@ -100,7 +112,7 @@ function formatTime(rawTime){
 }
 
 const averageTimeDiv = document.createElement("div");
-function insertAverageTime(){
+async function insertAverageTime(depth){
     // Get parent for average time header
     const archiveViewer = document.getElementsByClassName("archive_viewer-content")[0];
 
@@ -116,6 +128,10 @@ function insertAverageTime(){
         archiveViewer.before(averageTimeDiv);
     } else {
         console.log("Error inserting average time");
+        if(depth < MAXDEPTH){
+            await delay(100);
+            insertAverageTime(depth + 1);
+        }
     }
 }
 
@@ -140,14 +156,31 @@ function setGame(gameName){
     currentGame = gameName;
 }
 
+function updateGameName(name){
+    switch(name){
+        case "Mini":
+            setGameToMini();
+            break;
+        case "Midi":
+            setGameToMidi();
+            break;
+        case "Daily":
+            setGameToDaily();
+            break;
+        case "Bonus":
+            setGameToBonus();
+            break;
+    }
+}
+
 let currentGame = "mini";
 function getCurrentGame(){
     return currentGame;
 }
 
 
-function doItAll(){
-    getTimes(...getCurrentMonthAndYear(), getCurrentGame());
+async function doItAll(){
+    getTimes(...await getCurrentMonthAndYear(0), getCurrentGame());
 }
 
 async function doItAllDelayed(){
@@ -187,8 +220,12 @@ async function addEventListeners(){
         switch(button.tagName){
             case "A":
                 // Allow for specific control if needed
-                //console.log(button.innerText.split("\n")[0]);
-                switch(button.innerText.split("\n")[0]){
+                const shortenedName = button.innerText.split("\n")[0];
+                if(button.innerText.length > 5){
+                    updateGameName(shortenedName);
+                }
+
+                switch(shortenedName){
                     case "Mini":
                         button.addEventListener("click",setGameToMini);
                         break;
@@ -220,6 +257,6 @@ removeAds();
 
 addEventListeners();
 
-insertAverageTime();
+insertAverageTime(0);
 
 doItAll();
