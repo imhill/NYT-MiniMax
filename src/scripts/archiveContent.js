@@ -18,8 +18,16 @@ async function getCurrentMonthAndYear(depth){
     const archiveDropdowns = document.getElementsByClassName("archive_dropdown");
 
     if(archiveDropdowns.length > 0){
-        const monthValue = String(Number(archiveDropdowns[0].value) + 1).padStart(2,"0");
-        const yearValue = archiveDropdowns[1].value;
+        let monthValue;
+        let yearValue;
+
+        if(archiveDropdowns.length == 2){
+            monthValue = String(Number(archiveDropdowns[0].value) + 1).padStart(2,"0");
+            yearValue = archiveDropdowns[1].value;
+        } else {
+            monthValue = 0;
+            yearValue = archiveDropdowns[0].value;
+        }
 
         return [monthValue, yearValue];
     } else {
@@ -32,6 +40,8 @@ async function getCurrentMonthAndYear(depth){
         }
     }
 }
+
+const supportedModes = {"mini":true, "midi":true};
 
 // Get this month's times
 async function getTimes(month, year, game){
@@ -131,6 +141,8 @@ async function insertAverageTime(depth){
         if(depth < MAXDEPTH){
             await delay(100);
             insertAverageTime(depth + 1);
+        } else {
+            
         }
     }
 }
@@ -149,11 +161,18 @@ function setGameToDaily(){
 }
 
 function setGameToBonus(){
+    clearAverageTimeDiv();
     setGame("bonus");
 }
 
 function setGame(gameName){
     currentGame = gameName;
+}
+
+function clearAverageTimeDiv(){
+    if(averageTimeDiv){
+        averageTimeDiv.innerText = "";
+    }
 }
 
 function updateGameName(name){
@@ -180,7 +199,11 @@ function getCurrentGame(){
 
 
 async function doItAll(){
-    getTimes(...await getCurrentMonthAndYear(0), getCurrentGame());
+    if(currentGame != "bonus"){
+        getTimes(...await getCurrentMonthAndYear(0), getCurrentGame());
+    } else {
+        clearAverageTimeDiv();
+    }
 }
 
 async function doItAllDelayed(){
